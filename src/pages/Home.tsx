@@ -9,6 +9,7 @@ import { WeatheredHorizonsPrototype } from '../components/home/WeatheredHorizons
 import { HeroSky } from '../components/home/HeroSky'
 import { PageSkyAmbient } from '../components/home/PageSkyAmbient'
 import { AboutSky } from '../components/home/AboutSky'
+import { ContactSky } from '../components/home/ContactSky'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
 export function Home() {
@@ -23,6 +24,12 @@ export function Home() {
   const heroRef = useRef<HTMLElement>(null)
 
   const { scrollYProgress: pageProgress } = useScroll()
+  const smoothPageProgress = useSpring(pageProgress, {
+    stiffness: 180,
+    damping: 38,
+    mass: 0.45,
+    restDelta: 0.001,
+  })
 
   const { scrollYProgress: heroProgress } = useScroll({
     target: heroRef,
@@ -46,7 +53,7 @@ export function Home() {
   return (
     <div className="reference-home">
       <IntroLoader onComplete={revealHero} />
-      <PageSkyAmbient progress={pageProgress} reducedMotion={Boolean(reduceMotion)} />
+      <PageSkyAmbient progress={smoothPageProgress} reducedMotion={Boolean(reduceMotion)} />
 
       <section
         className="sky-hero-journey"
@@ -162,27 +169,7 @@ export function Home() {
 
       <AboutSky />
 
-      <section className="reference-contact" id="contact">
-        <div className="reference-grid" aria-hidden="true" />
-        <p className="ref-eyebrow">04 / LET’S TALK</p>
-        <h2>
-          Have something in mind?<br /><span>Let’s give it a shape.</span>
-        </h2>
-        <div className="contact-ledger">
-          <div className="contact-ledger-row contact-ledger-intro"><span>BASED IN</span><strong>{profile.location}</strong><p>Frontend engineering, interaction, and product work.</p></div>
-          {profile.email ? <a className="contact-ledger-row" href={`mailto:${profile.email}`}><span>EMAIL</span><strong>{profile.email}</strong><small>Start a conversation</small></a> : <div className="contact-ledger-row is-pending"><span>EMAIL</span><strong>Not published yet</strong><small>Contact address will be added before launch.</small></div>}
-          {profile.resume ? <div className="contact-ledger-row contact-ledger-cv"><span>CV / PDF</span><strong>Curriculum Vitae</strong><div><a href={profile.resume} target="_blank" rel="noreferrer">View CV</a><a href={profile.resume} download>Download</a></div></div> : <div className="contact-ledger-row is-pending"><span>CV / PDF</span><strong>In preparation</strong><small>The final document will live here.</small></div>}
-        </div>
-        <footer>
-          <span>© {new Date().getFullYear()} {profile.name}</span>
-          <div>
-            {profile.linkedin && <a href={profile.linkedin}>LinkedIn</a>}
-            {profile.github && <a href={profile.github}>GitHub</a>}
-            {profile.resume && <a href={profile.resume}>CV</a>}
-          </div>
-          <span>BUILT WITH CARE & CURIOSITY</span>
-        </footer>
-      </section>
+      <ContactSky />
     </div>
   )
 }

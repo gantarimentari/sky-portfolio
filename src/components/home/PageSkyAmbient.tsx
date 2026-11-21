@@ -3,6 +3,7 @@ import { motion, useTransform, type MotionValue } from 'motion/react'
 export function PageSkyAmbient({ progress, reducedMotion = false }: { progress: MotionValue<number>; reducedMotion?: boolean }) {
   const afternoonOpacity = useTransform(progress, [0, .1, .42, .72], [0, .12, .82, 1])
   const sunsetOpacity = useTransform(progress, [.28, .48, .74, .9], [0, .08, .9, 1])
+  const horizonOpacity = useTransform(progress, [.2, .42, .68, .84, .98], [0, .18, .72, .32, .06])
   const duskOpacity = useTransform(progress, [.62, .78, .93, 1], [0, .16, .94, 1])
   // About is the twilight-to-midnight bridge. The night layer must already be
   // dominant before Contact enters the viewport, otherwise the sunset layer
@@ -16,6 +17,7 @@ export function PageSkyAmbient({ progress, reducedMotion = false }: { progress: 
     <div className="page-sky-day" />
     <motion.div className="page-sky-afternoon" style={reducedMotion ? undefined : { opacity: afternoonOpacity }} />
     <motion.div className="page-sky-sunset" style={reducedMotion ? undefined : { opacity: sunsetOpacity }} />
+    <motion.div className="page-sky-horizon" style={reducedMotion ? undefined : { opacity: horizonOpacity }} />
     <motion.div className="page-sky-dusk" style={reducedMotion ? undefined : { opacity: duskOpacity }} />
     <motion.div className="page-sky-night" style={reducedMotion ? undefined : { opacity: nightOpacity }} />
     <motion.div className="page-sky-stars" style={reducedMotion ? undefined : { opacity: starsOpacity }} />
