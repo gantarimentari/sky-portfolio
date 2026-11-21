@@ -226,8 +226,8 @@ export const profile = {
   // availability: 'Available for work',
   email: 'gantarilarasati@gmail.com',
   github: '',
-  linkedin: 'https://www.linkedin.com/in/Larasati Ayu Gantari-CV/',
-  resume: '/Larasati Ayu Gantari-CV.pdf',
+  linkedin: 'https://www.linkedin.com/in/larasati-ayu-gantari-CV/',
+  resume: '/Larasati-Ayu-Gantari-CV.pdf',
   intro: 'I’m a software engineering student interested in the space where reliable engineering, clear interfaces, and creative experimentation meet.',
   skills: [
     { label: 'Frontend', items: ['React', 'Next.js', 'Vue', 'TypeScript', 'Tailwind CSS'] },
