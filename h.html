@@ -1,0 +1,670 @@
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creative Portfolio — Cinematic Experience</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+    :root {
+      --bg: #09090b;
+      --fg: #f4f2eb;
+      --muted: #9d9da5;
+      --accent: #c5ff62;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: auto; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    #scene {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .grain {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      opacity: .12;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.3'/%3E%3C/svg%3E");
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 20;
+      padding: 26px 5vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(#09090bd9, transparent);
+    }
+
+    .brand {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -.04em;
+    }
+
+    nav .links { display: flex; gap: 30px; }
+    a { color: inherit; text-decoration: none; }
+    nav a { font-size: 12px; text-transform: uppercase; letter-spacing: .12em; }
+    nav a:hover { color: var(--accent); }
+
+    section {
+      position: relative;
+      z-index: 3;
+      min-height: 100vh;
+      padding: 110px 7vw;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .22em;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      margin: 0;
+      letter-spacing: -.065em;
+    }
+
+    h1 { font-size: clamp(64px, 10.8vw, 180px); line-height: .86; }
+    h2 { font-size: clamp(54px, 8vw, 120px); line-height: .95; }
+    p { line-height: 1.75; color: var(--muted); }
+
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero h1 { max-width: 1100px; }
+    .hero h1 span { color: var(--accent); }
+
+    .hero-bottom {
+      position: absolute;
+      bottom: 50px;
+      left: 7vw;
+      right: 7vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 30px;
+    }
+
+    .hero-bottom p { max-width: 350px; font-size: 14px; }
+
+    .scroll-hint {
+      font-size: 11px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .transition-space {
+      height: 85vh;
+      display: grid;
+      place-items: center;
+      text-align: center;
+    }
+
+    .transition-space h2 {
+      max-width: 900px;
+      font-size: clamp(36px, 6vw, 88px);
+    }
+
+    .work { padding-top: 130px; }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 30px;
+      margin-bottom: 100px;
+    }
+    .section-head p { max-width: 280px; font-size: 14px; }
+
+    .project {
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      border-top: 1px solid #ffffff29;
+      gap: 7vw;
+      padding: 60px 0;
+    }
+    .project:nth-of-type(even) { flex-direction: row-reverse; }
+
+    .project-visual {
+      flex: 1.25;
+      height: 460px;
+      min-width: 0;
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      transform-style: preserve-3d;
+    }
+
+    .visual-apd { background: #b9d5bf; }
+    .visual-place { background: #c3b4ed; }
+    .visual-fanina { background: #e6b49a; }
+
+    .mock-window {
+      width: 75%;
+      height: 65%;
+      background: #15171b;
+      border: 7px solid #30343a;
+      border-radius: 13px;
+      box-shadow: 25px 30px 55px #0005;
+      transform: perspective(800px) rotateY(-15deg) rotateX(8deg);
+      padding: 15px;
+    }
+    .mock-top {
+      display: flex;
+      gap: 6px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #ffffff2b;
+    }
+    .mock-top i {
+      width: 7px; height: 7px;
+      border-radius: 50%; background: #aaa;
+    }
+    .mock-content {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 12px;
+      height: 75%;
+      padding-top: 15px;
+    }
+    .mock-sidebar { background: #292d34; border-radius: 5px; }
+    .mock-main {
+      background: linear-gradient(135deg, #363d46, #1b1e24);
+      border-radius: 5px;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(12px, 2vw, 23px);
+      font-weight: 700;
+    }
+
+    .project-copy { flex: 1; }
+    .project-index { color: var(--accent); font-size: 12px; }
+    .project h3 {
+      font-size: clamp(38px, 5vw, 80px);
+      margin: 20px 0;
+    }
+    .project-copy p { max-width: 410px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 9px; margin: 25px 0; }
+    .tags span {
+      border: 1px solid #ffffff45;
+      border-radius: 50px;
+      padding: 8px 12px;
+      font-size: 11px;
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--accent);
+      font-size: 13px;
+      border-bottom: 1px solid var(--accent);
+      padding-bottom: 9px;
+    }
+
+    .experience { padding-top: 180px; }
+    .experience-intro { max-width: 1000px; margin-bottom: 110px; }
+    .experience-intro h2 span { color: var(--accent); }
+
+    .experience-list { border-top: 1px solid #ffffff30; }
+    .experience-item {
+      display: grid;
+      grid-template-columns: 70px 1fr 1fr 100px;
+      align-items: center;
+      gap: 20px;
+      min-height: 150px;
+      border-bottom: 1px solid #ffffff30;
+      transition: padding .3s, color .3s;
+    }
+    .experience-item:hover { padding-left: 15px; color: var(--accent); }
+    .experience-item h3 { font-size: clamp(24px, 3vw, 44px); }
+    .experience-item p { font-size: 13px; margin: 0; }
+    .experience-item small { color: var(--muted); }
+
+    .about {
+      min-height: 95vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-width: 1150px;
+    }
+    .about h2 { margin: 25px 0; }
+    .about h2 em { color: var(--accent); font-style: normal; }
+    .about p { max-width: 650px; font-size: 18px; }
+
+    .skills { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 35px; }
+    .skills span {
+      padding: 11px 16px;
+      border: 1px solid #ffffff45;
+      border-radius: 40px;
+      font-size: 13px;
+    }
+
+    .contact {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-top: 1px solid #ffffff2c;
+    }
+    .contact h2 { font-size: clamp(68px, 12vw, 190px); }
+    .contact h2 span { color: var(--accent); }
+    .contact p { max-width: 450px; }
+    .contact-links { display: flex; gap: 25px; margin-top: 40px; }
+    .contact-links a {
+      border-bottom: 1px solid var(--accent);
+      padding-bottom: 10px;
+      font-size: 14px;
+    }
+    footer {
+      position: relative;
+      z-index: 3;
+      padding: 30px 7vw;
+      border-top: 1px solid #ffffff30;
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 760px) {
+      nav { padding: 20px 6vw; }
+      nav .links { gap: 12px; }
+      nav a { font-size: 10px; }
+      section { padding: 100px 6vw; }
+      .hero-bottom { left: 6vw; right: 6vw; }
+      .project, .project:nth-of-type(even) {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .project-visual { flex: auto; height: 300px; }
+      .section-head { flex-direction: column; align-items: start; }
+      .experience-item {
+        grid-template-columns: 35px 1fr;
+        padding: 22px 0;
+        gap: 8px;
+      }
+      .experience-item p { grid-column: 2; }
+      .experience-item small { grid-column: 2; }
+      .hero-bottom { align-items: end; }
+      .hero-bottom p { max-width: 210px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="scene" aria-hidden="true"></canvas>
+<div class="grain"></div>
+
+<nav>
+  <a class="brand" href="#home">YOUR NAME®</a>
+  <div class="links">
+    <a href="#work">Work</a>
+    <a href="#experience">Experience</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<main>
+  <section class="hero" id="home">
+    <div class="eyebrow">Creative developer / Curious human</div>
+    <h1>MAKING<br>IDEAS <span>MOVE.</span></h1>
+    <div class="hero-bottom">
+      <p>I build digital experiences, explore new ideas, and grow through collaboration.</p>
+      <div class="scroll-hint">Scroll to explore ↓</div>
+    </div>
+  </section>
+
+  <section class="transition-space">
+    <h2 class="reveal">NOT JUST CODE.<br>IT'S ABOUT <span style="color:var(--accent)">CREATING.</span></h2>
+  </section>
+
+  <section class="work" id="work">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">01 / Selected projects</div>
+        <h2>THINGS<br>I'VE BUILT.</h2>
+      </div>
+      <p>A selection of projects where curiosity meets problem-solving.</p>
+    </div>
+
+    <article class="project">
+      <div class="project-visual visual-apd">
+        <div class="mock-window">
+          <div class="mock-top"><i></i><i></i><i></i></div>
+          <div class="mock-content">
+            <div class="mock-sidebar"></div>
+            <div class="mock-main">APD DETECTION</div>
+          </div>
+        </div>
+      </div>
+      <div class="project-copy">
+        <span class="project-index">01 / FEATURED WORK</span>
+        <h3>APD<br>Detection.</h3>
+        <p>A web interface for safety equipment detection, monitoring, and management workflows.</p>
+        <div class="tags"><span>Next.js</span><span>TypeScript</span><span>FastAPI Integration</span></div>
+        <a class="project-link" href="#contact">Project details coming soon ↗</a>
+      </div>
+    </article>
+
+    <article class="project">
+      <div class="project-visual visual-place">
+        <div class="mock-window">
+          <div class="mock-top"><i></i><i></i><i></i></div>
+          <div class="mock-content">
+            <div class="mock-sidebar"></div>
+            <div class="mock-main">PLACELOG</div>
+          </div>
+        </div>
+      </div>
+      <div class="project-copy">
+        <span class="project-index">02 / FEATURED WORK</span>
+        <h3>PlaceLog.</h3>
+        <p>A place management application built with REST APIs, authentication, testing, and containerized services.</p>
+        <div class="tags"><span>Laravel</span><span>Vue</span><span>Docker</span></div>
+        <a class="project-link" href="#contact">Project details coming soon ↗</a>
+      </div>
+    </article>
+
+    <article class="project">
+      <div class="project-visual visual-fanina">
+        <div class="mock-window">
+          <div class="mock-top"><i></i><i></i><i></i></div>
+          <div class="mock-content">
+            <div class="mock-sidebar"></div>
+            <div class="mock-main">DRH. FANINA</div>
+          </div>
+        </div>
+      </div>
+      <div class="project-copy">
+        <span class="project-index">03 / FEATURED WORK</span>
+        <h3>Company<br>Profile.</h3>
+        <p>A responsive business website focused on clear information and accessible navigation.</p>
+        <div class="tags"><span>Next.js</span><span>React</span><span>Tailwind</span></div>
+        <a class="project-link" href="#contact">Project details coming soon ↗</a>
+      </div>
+    </article>
+  </section>
+
+  <section class="experience" id="experience">
+    <div class="experience-intro">
+      <div class="eyebrow">02 / Beyond the code</div>
+      <h2>GOOD THINGS<br>ARE BUILT <span>TOGETHER.</span></h2>
+      <p>Communities, committees, and experiences that have shaped how I learn and collaborate.</p>
+    </div>
+
+    <div class="experience-list">
+      <div class="experience-item">
+        <small>01</small><h3>KOMATIK</h3>
+        <p>Creative Division Staff<br>Student organization</p><small>2024–25</small>
+      </div>
+      <div class="experience-item">
+        <small>02</small><h3>GDGoC UGM</h3>
+        <p>Frontend Team Member<br>Developer community</p><small>2025</small>
+      </div>
+      <div class="experience-item">
+        <small>03</small><h3>Tech Innovation Festival</h3>
+        <p>Event Committee<br>Campus event</p><small>2025</small>
+      </div>
+      <div class="experience-item">
+        <small>04</small><h3>GEMASTIK UGM</h3>
+        <p>Contingent Member<br>Technology competition</p><small>2025</small>
+      </div>
+    </div>
+    <p style="font-size:11px;margin-top:30px">* Experience roles and dates are placeholder data for this prototype.</p>
+  </section>
+
+  <section class="about" id="about">
+    <div class="eyebrow">03 / A little about me</div>
+    <h2>CURIOUS<br>BY <em>DEFAULT.</em></h2>
+    <p>I'm a software engineering student who enjoys turning ideas into useful digital products. Beyond programming, I value collaboration, experimentation, and learning from new experiences.</p>
+    <div class="skills">
+      <span>Frontend Development</span>
+      <span>React</span>
+      <span>TypeScript</span>
+      <span>Laravel</span>
+      <span>Python</span>
+      <span>UI Engineering</span>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="eyebrow">04 / The next chapter</div>
+    <h2>LET'S MAKE<br><span>IT HAPPEN.</span></h2>
+    <p>Have an opportunity, a collaboration, or an idea worth exploring? I'd love to hear about it.</p>
+    <div class="contact-links">
+      <a href="mailto:hello@example.com">Email (placeholder) ↗</a>
+      <a href="#home">Back to top ↑</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span>© 2026 — Portfolio prototype</span>
+  <span>Made with curiosity.</span>
+</footer>
+
+<script type="module">
+  import * as THREE from 'https://esm.sh/three@0.180.0';
+  import gsap from 'https://esm.sh/gsap@3.14.2';
+  import { ScrollTrigger } from 'https://esm.sh/gsap@3.14.2/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const canvas = document.querySelector('#scene');
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    antialias: true,
+    alpha: true
+  });
+
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(
+    42,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    100
+  );
+  camera.position.set(0, 0, 9);
+
+  const ambient = new THREE.AmbientLight(0xffffff, 1.8);
+  scene.add(ambient);
+
+  const keyLight = new THREE.PointLight(0xc5ff62, 90);
+  keyLight.position.set(4, 4, 5);
+  scene.add(keyLight);
+
+  const rimLight = new THREE.PointLight(0x8a7aff, 65);
+  rimLight.position.set(-4, -2, 3);
+  scene.add(rimLight);
+
+  const group = new THREE.Group();
+  scene.add(group);
+
+  const geometry = new THREE.TorusKnotGeometry(1.65, 0.48, 240, 32, 2, 3);
+  const material = new THREE.MeshPhysicalMaterial({
+    color: 0xc5ff62,
+    metalness: 0.65,
+    roughness: 0.19,
+    clearcoat: 1,
+    clearcoatRoughness: 0.1,
+    flatShading: false
+  });
+
+  const sculpture = new THREE.Mesh(geometry, material);
+  group.add(sculpture);
+  group.position.set(2.2, 0, 0);
+
+  const wire = new THREE.Mesh(
+    new THREE.IcosahedronGeometry(2.7, 2),
+    new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.055
+    })
+  );
+  group.add(wire);
+
+  const particlesGeometry = new THREE.BufferGeometry();
+  const count = 350;
+  const positions = new Float32Array(count * 3);
+
+  for (let i = 0; i < count; i++) {
+    positions[i * 3] = (Math.random() - 0.5) * 17;
+    positions[i * 3 + 1] = (Math.random() - 0.5) * 12;
+    positions[i * 3 + 2] = (Math.random() - 0.5) * 10;
+  }
+
+  particlesGeometry.setAttribute(
+    'position',
+    new THREE.BufferAttribute(positions, 3)
+  );
+
+  const particles = new THREE.Points(
+    particlesGeometry,
+    new THREE.PointsMaterial({
+      color: 0xffffff,
+      size: 0.018,
+      transparent: true,
+      opacity: 0.6
+    })
+  );
+  scene.add(particles);
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!reducedMotion) {
+    const journey = gsap.timeline({
+      scrollTrigger: {
+        trigger: document.body,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 1.6
+      }
+    });
+
+    journey
+      .to(group.rotation, { y: Math.PI * 1.4, x: 0.5, duration: 1 }, 0)
+      .to(group.position, { x: -2.5, y: 0.4, z: -1.5, duration: 1 }, 0)
+      .to(camera.position, { z: 5.8, duration: 1 }, 0)
+      .to(group.rotation, { y: Math.PI * 3, z: 0.8, duration: 1 }, 1)
+      .to(group.position, { x: 2.7, y: -0.4, z: -3, duration: 1 }, 1)
+      .to(material.color, { r: 0.54, g: 0.48, b: 1, duration: 1 }, 1)
+      .to(group.rotation, { y: Math.PI * 4.5, x: 1.5, duration: 1 }, 2)
+      .to(group.position, { x: -2.5, y: 0.5, z: -2, duration: 1 }, 2)
+      .to(group.scale, { x: 0.7, y: 0.7, z: 0.7, duration: 1 }, 2)
+      .to(group.position, { x: 2.8, y: 0, z: -3, duration: 1 }, 3)
+      .to(group.rotation, { y: Math.PI * 6, duration: 1 }, 3)
+      .to(group.position, { x: 0, y: 0, z: -1, duration: 1 }, 4)
+      .to(group.scale, { x: 1.4, y: 1.4, z: 1.4, duration: 1 }, 4);
+
+    gsap.utils.toArray('.reveal, .section-head, .project-copy, .experience-intro, .experience-item, .about h2, .contact h2').forEach(el => {
+      gsap.from(el, {
+        y: 70,
+        opacity: 0,
+        duration: 1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 88%',
+          once: true
+        }
+      });
+    });
+
+    gsap.utils.toArray('.project-visual').forEach(el => {
+      gsap.from(el, {
+        scale: 0.86,
+        y: 100,
+        opacity: 0,
+        duration: 1.2,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 90%',
+          once: true
+        }
+      });
+    });
+  }
+
+  const mouse = { x: 0, y: 0 };
+  window.addEventListener('pointermove', e => {
+    mouse.x = (e.clientX / window.innerWidth - 0.5) * 2;
+    mouse.y = (e.clientY / window.innerHeight - 0.5) * 2;
+  });
+
+  const clock = new THREE.Clock();
+
+  function animate() {
+    requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+
+    if (!reducedMotion) {
+      sculpture.rotation.y += 0.002;
+      wire.rotation.y -= 0.0006;
+      group.rotation.x += (mouse.y * 0.12 - group.rotation.x * 0.001) * 0.002;
+      particles.rotation.y = t * 0.003;
+    }
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    ScrollTrigger.refresh();
+  });
+</script>
+</body>
+</html> -->
