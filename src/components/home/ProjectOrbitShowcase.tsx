@@ -3,6 +3,7 @@ import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Link } from 'react-router'
 import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform, type MotionValue } from 'motion/react'
 import { projects, type Project } from '../../data/projects'
+import './OrbitHalo.css'
 
 const REVEAL_START = .025
 const REVEAL_END = .455
@@ -90,6 +91,15 @@ function OrbitCard({ project, index, progress, active, selected }: { project: Pr
   </motion.article>
 }
 
+// The navigation is a miniature of the orbit: each point turns with its card, the front one is the open project.
+function HaloPoint({ index, progress, active, label, onSelect }: { index: number; progress: MotionValue<number>; active: boolean; label: string; onSelect: () => void }) {
+  const angle = useTransform(progress, current => (90 + (index - (current < ORBIT_START ? 0 : getOrbitTurn(current))) * 60) * Math.PI / 180)
+  const x = useTransform(angle, current => Math.cos(current) * 46)
+  const y = useTransform(angle, current => Math.sin(current) * 15)
+  const scale = useTransform(angle, current => .72 + .28 * (Math.sin(current) + 1) / 2)
+  return <motion.button type="button" className={active ? 'is-active' : ''} style={{ x, y, scale }} onClick={onSelect} aria-label={label} aria-current={active ? 'true' : undefined}><span /></motion.button>
+}
+
 function ProjectPoster({ project }: { project: Project }) {
   return <div className={`orbit-project-poster visual-${project.accent}`}>
     {project.screenshot
@@ -146,7 +156,7 @@ export function ProjectOrbitShowcase() {
 
   return <section className={`project-orbit-section orbit-phase-${phase}`} id="selected-work" ref={sectionRef} aria-label="Animated project archive">
     <div className="project-orbit-sticky">
-      <div className="orbit-topline"><span>01 / PROJECT ARCHIVE</span><span>0{displayIndex + 1} / 06 · SIX SELECTED PROJECTS</span></div>
+      <div className="orbit-topline"><span><b>01</b>Project archive</span><span><em className="orbit-ticks" aria-hidden="true">{projects.map((project, index) => <i key={project.slug} className={index <= displayIndex ? 'is-lit' : ''} />)}</em><b>0{displayIndex + 1}</b> / 06 · Six selected projects</span></div>
       <motion.div className="orbit-progress" style={{ scaleX: progressScale }} />
       <div className="orbit-stage">
         {projects.map((project, index) => <OrbitCard key={project.slug} project={project} index={index} progress={smoothProgress} active={(phase === 'reveal' || phase === 'orbit') && index === activeIndex} selected={phase === 'archive' && index === selectorIndex} />)}
@@ -165,7 +175,7 @@ export function ProjectOrbitShowcase() {
 
       <motion.nav className="orbit-navigation" style={{ opacity: orbitUiOpacity, y: orbitUiY }} aria-label="Project orbit navigation">
         <button type="button" onClick={() => goToProject(Math.max(0, activeIndex - 1))} disabled={activeIndex === 0} aria-label="Previous project"><ChevronLeft size={17} /></button>
-        <div className="orbit-dots">{projects.map((project, index) => <button key={project.slug} type="button" className={index === activeIndex ? 'is-active' : ''} onClick={() => goToProject(index)} aria-label={`Show project ${index + 1}: ${project.title}`} aria-current={index === activeIndex ? 'true' : undefined}><span /></button>)}</div>
+        <div className="orbit-halo-map">{projects.map((project, index) => <HaloPoint key={project.slug} index={index} progress={smoothProgress} active={index === activeIndex} label={`Show project ${index + 1}: ${project.title}`} onSelect={() => goToProject(index)} />)}</div>
         <button type="button" onClick={() => goToProject(Math.min(projects.length - 1, activeIndex + 1))} disabled={activeIndex === projects.length - 1} aria-label="Next project"><ChevronRight size={17} /></button>
       </motion.nav>
       <motion.div className="orbit-archive-selector" style={{ opacity: archiveOpacity, y: archiveY }}>
