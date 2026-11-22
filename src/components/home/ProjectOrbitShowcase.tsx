@@ -32,12 +32,14 @@ function cardGeometry(index: number, progress: number, compactViewport: boolean)
 
   if (progress < FORMATION_START) {
     if (local <= 0) return { x: deckX, y: deckY, scale: deckScale, rotate: (index - 2.5) * .35, opacity: 1, z: 20 - index, depth: 1 }
-    if (local < .68) {
-      const lift = ease(local / .34)
+    if (local < .5) {
+      const lift = ease(local / .3)
       return { x: mix(deckX, side * 1.5, lift), y: mix(deckY, -2.5, lift), scale: mix(deckScale, 1.075, lift), rotate: mix(0, side * 1.8, lift), opacity: 1, z: 50, depth: 1 }
     }
-    const park = ease((local - .68) / .32)
-    return { x: mix(side * 1.5, openedX, park), y: mix(-2.5, openedY, park), scale: mix(1.075, .72, park), rotate: mix(side * 1.8, openedRotate, park), opacity: 1, z: 12 - index, depth: 1 }
+    // Half the slice to glide aside. Parked cards keep one stacking order (above the deck, earlier cards on top),
+    // so nothing pops in front or behind while a card is moving or when it lands.
+    const park = ease((local - .5) / .5)
+    return { x: mix(side * 1.5, openedX, park), y: mix(-2.5, openedY, park), scale: mix(1.075, .72, park), rotate: mix(side * 1.8, openedRotate, park), opacity: 1, z: 40 - index, depth: 1 }
   }
 
   const formation = clamp((progress - FORMATION_START) / (ORBIT_START - FORMATION_START))
