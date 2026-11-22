@@ -8,7 +8,7 @@
  */
 #selected-work.project-orbit-section {
   --halo-ink: var(--project-ink, #15345d);
-  --halo-warm: #b4532c;
+  --halo-warm: #7c3217;
   --halo-rx: 31vw;
   --halo-ry: 29vh;
 }
@@ -36,15 +36,14 @@
 
 #selected-work .orbit-stage::after {
   background: radial-gradient(closest-side,
-    transparent 0 24%,
-    rgba(28, 58, 108, .06) 50%,
-    rgba(28, 58, 108, .09) 75.6%,
-    rgba(255, 126, 88, .24) 76.4%,
-    rgba(255, 222, 182, .6) 76.9%,
-    rgba(255, 255, 255, .42) 78%,
-    rgba(232, 242, 255, .16) 81.5%,
-    rgba(206, 226, 255, .06) 88%,
-    transparent 96%);
+    transparent 0 30%,
+    rgba(28, 58, 108, .025) 55%,
+    rgba(28, 58, 108, .045) 74.6%,
+    rgba(255, 150, 112, .12) 76.1%,
+    rgba(255, 228, 194, .26) 77.1%,
+    rgba(255, 255, 255, .16) 79%,
+    rgba(232, 242, 255, .06) 84%,
+    transparent 94%);
 }
 
 /* Sundogs: level with the sun, just outside the ring, red on the side facing it. */
@@ -61,7 +60,7 @@
     radial-gradient(ellipse 5% 1.2% at 92.5% 50%, rgba(214, 232, 255, .3), transparent);
 }
 
-#selected-work.orbit-phase-orbit .orbit-stage::before { opacity: .9; transform: scale(1); }
+#selected-work.orbit-phase-orbit .orbit-stage::before { opacity: .55; transform: scale(1); }
 
 /* The sun at the centre of the halo carries the open project. */
 #selected-work .orbit-focus-copy {
@@ -77,12 +76,13 @@
   content: '';
   position: absolute;
   z-index: -1;
-  inset: -42% -24%;
+  inset: -62% -36%;
   border-radius: 50%;
   background: radial-gradient(closest-side,
-    rgba(255, 254, 247, .96) 0 30%,
-    rgba(255, 249, 230, .86) 52%,
-    rgba(255, 242, 214, .42) 74%,
+    rgba(255, 253, 246, .58) 0 16%,
+    rgba(255, 249, 232, .4) 40%,
+    rgba(255, 244, 220, .16) 66%,
+    rgba(255, 240, 212, .05) 84%,
     rgba(255, 238, 206, 0));
   pointer-events: none;
 }
