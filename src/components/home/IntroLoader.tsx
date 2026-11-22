@@ -2,8 +2,8 @@ import { useCallback, useEffect, useState, type AnimationEvent } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { hasSeenIntro, markIntroSeen, prepareInitialViewport } from '../../lib/initialViewportReady'
 
-const INTRO_HOLD_MS = 1_720
-const EXIT_FALLBACK_MS = 1_050
+const INTRO_HOLD_MS = 1_050
+const EXIT_FALLBACK_MS = 800
 
 export function IntroLoader({ onComplete }: { onComplete?: () => void }) {
   const reduceMotion = useReducedMotion()

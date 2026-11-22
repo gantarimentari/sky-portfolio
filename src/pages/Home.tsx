@@ -30,12 +30,6 @@ export function Home() {
   const heroRef = useRef<HTMLElement>(null)
 
   const { scrollYProgress: pageProgress } = useScroll()
-  const smoothPageProgress = useSpring(pageProgress, {
-    stiffness: 180,
-    damping: 38,
-    mass: 0.45,
-    restDelta: 0.001,
-  })
 
   const { scrollYProgress: heroProgress } = useScroll({
     target: heroRef,
@@ -59,7 +53,7 @@ export function Home() {
   return (
     <div className="reference-home">
       <IntroLoader onComplete={revealHero} />
-      <PageSkyAmbient progress={smoothPageProgress} reducedMotion={Boolean(reduceMotion)} />
+      <PageSkyAmbient progress={pageProgress} reducedMotion={Boolean(reduceMotion)} />
 
       <section
         className="sky-hero-journey"

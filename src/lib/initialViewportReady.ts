@@ -1,5 +1,5 @@
 const HERO_CLOUD_SRC = '/assets/hero-cloud-bank-v2.png'
-const READINESS_TIMEOUT_MS = 5_500
+const READINESS_TIMEOUT_MS = 3_000
 const INTRO_SESSION_KEY = 'ccr-intro-seen'
 
 let initialViewportPromise: Promise<void> | undefined
@@ -39,26 +39,8 @@ function waitForImage(src: string) {
   })
 }
 
-function waitForFontStylesheet() {
-  const stylesheet = document.querySelector<HTMLLinkElement>('#portfolio-fonts')
-  if (!stylesheet || stylesheet.dataset.loaded === 'true') return Promise.resolve()
-
-  return new Promise<void>((resolve) => {
-    const finish = () => {
-      stylesheet.removeEventListener('load', finish)
-      stylesheet.removeEventListener('error', finish)
-      resolve()
-    }
-
-    stylesheet.addEventListener('load', finish, { once: true })
-    stylesheet.addEventListener('error', finish, { once: true })
-  })
-}
-
 async function waitForCriticalFonts() {
   if (!('fonts' in document)) return Promise.resolve()
-
-  await waitForFontStylesheet()
 
   const fontFaces = [
     '500 1em Manrope',
@@ -72,7 +54,15 @@ async function waitForCriticalFonts() {
 
 function waitForInitialLayout() {
   return new Promise<void>((resolve) => {
-    requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+    let settled = false
+    const finish = () => {
+      if (settled) return
+      settled = true
+      window.clearTimeout(fallback)
+      resolve()
+    }
+    const fallback = window.setTimeout(finish, 120)
+    requestAnimationFrame(() => requestAnimationFrame(finish))
   })
 }
 
