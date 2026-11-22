@@ -6,16 +6,10 @@
  * Every glow is a static gradient: only opacity and transform ever change.
  * The #selected-work prefix outranks the layered overrides in index.css without touching them.
  */
-/* Registered so the sun's colour glides from one project to the next instead of jumping. */
-@property --project-tint {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: #15345d;
-}
-
 #selected-work.project-orbit-section {
-  transition: --project-tint .8s ease;
-  --tint-ink: oklch(from var(--project-tint) min(l, .36) c h); /* capped lightness keeps every tint readable as ink */
+  /* One sun for every project: a white aureole fading into sky blue, as forward-scattered light does around the midday sun. */
+  --sun-tint: #2a76b8;
+  --tint-ink: #003e7b;
   --halo-ink: var(--project-ink, #15345d);
   --halo-rx: 31vw;
   --halo-ry: 29vh;
@@ -87,10 +81,10 @@
   inset: -62% -36%;
   border-radius: 50%;
   background: radial-gradient(closest-side,
-    color-mix(in srgb, var(--project-tint) 6%, rgba(255, 253, 246, .6)) 0 16%,
-    color-mix(in srgb, var(--project-tint) 14%, rgba(255, 249, 232, .42)) 40%,
-    color-mix(in srgb, var(--project-tint) 22%, rgba(255, 244, 220, .2)) 66%,
-    color-mix(in srgb, var(--project-tint) 10%, rgba(255, 240, 212, .06)) 84%,
+    color-mix(in srgb, var(--sun-tint) 6%, rgba(255, 253, 246, .6)) 0 16%,
+    color-mix(in srgb, var(--sun-tint) 14%, rgba(255, 249, 232, .42)) 40%,
+    color-mix(in srgb, var(--sun-tint) 22%, rgba(255, 244, 220, .2)) 66%,
+    color-mix(in srgb, var(--sun-tint) 10%, rgba(255, 240, 212, .06)) 84%,
     rgba(255, 238, 206, 0));
   pointer-events: none;
 }

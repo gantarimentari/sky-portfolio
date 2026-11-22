@@ -1,4 +1,4 @@
-import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
+import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Link } from 'react-router'
 import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform, type MotionValue } from 'motion/react'
@@ -95,16 +95,6 @@ const OrbitCard = memo(forwardRef<HTMLElement, OrbitCardProps>(function OrbitCar
     </Link>
   </article>
 }), (previous, next) => previous.project === next.project && previous.active === next.active && previous.selected === next.selected)
-
-// Each project's own colour, sampled from its poster; the sun at the centre of the halo takes it on.
-const PROJECT_TINT: Record<string, string> = {
-  'apd-detection': '#5a1a8c',
-  placelog: '#295f48',
-  'fanina-company-profile': '#2a76b8',
-  'dont-forget-sleep': '#54348f',
-  'career-fit-ai': '#e7ac10',
-  sift: '#206ca8',
-}
 
 // New project copy rises in softly instead of swapping in place.
 const focusEnter = (delay: number) => ({ initial: { opacity: 0, y: 8 }, animate: { opacity: 1, y: 0 }, transition: { duration: .45, delay, ease: [.16, 1, .3, 1] as const } })
@@ -219,7 +209,7 @@ export function ProjectOrbitShowcase() {
   const selectedProject = projects[selectorIndex]
   const displayIndex = phase === 'archive' ? selectorIndex : activeIndex
 
-  return <section className={`project-orbit-section orbit-phase-${phase}`} id="selected-work" ref={sectionRef} aria-label="Animated project archive" style={{ '--project-tint': PROJECT_TINT[projects[displayIndex].slug] ?? '#15345d' } as CSSProperties}>
+  return <section className={`project-orbit-section orbit-phase-${phase}`} id="selected-work" ref={sectionRef} aria-label="Animated project archive">
     <div className="project-orbit-sticky">
       <div className="orbit-topline"><span><b>01</b>Project archive</span><span><em className="orbit-ticks" aria-hidden="true">{projects.map((project, index) => <i key={project.slug} className={index <= displayIndex ? 'is-lit' : ''} />)}</em><b>0{displayIndex + 1}</b> / 06 · Six selected projects</span></div>
       <motion.div className="orbit-progress" style={{ scaleX: progressScale }} />
