@@ -78,16 +78,6 @@ export function Home() {
           className="reference-hero-copy"
           style={reduceMotion ? undefined : { y: heroCopyY, opacity: heroCopyOpacity }}
         >
-          <motion.p
-            className="hero-center-kicker"
-            initial={reduceMotion ? false : { y: 18, opacity: 0 }}
-            animate={reduceMotion || heroReady ? { y: 0, opacity: 1 } : { y: 18, opacity: 0 }}
-            transition={{ delay: 0.02, duration: 0.72, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <span className="hero-halo-mark" aria-hidden="true" />
-            Software engineering student, Indonesia
-          </motion.p>
-
           {/* Master Editorial Title */}
           <h1 className="hero-art-title">
             <span className="title-row">
