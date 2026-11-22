@@ -1,0 +1,111 @@
+/*
+ * Ink follows the sky. A clear sky is deepest blue near the zenith and pales toward the horizon,
+ * where light crosses about ten times more air. The hero copy reads the same way: white type sits in
+ * a pocket of deeper, zenith-like blue, and the lines lower down, on the pale horizon band, switch
+ * to navy ink. No boxes, pills or glass. The small halo mark ties the hero to the orbit's 22° halo.
+ * The #top prefix outranks the layered rules in index.css.
+ */
+#top.sky-hero-journey { --hero-ink: #15345d; }
+
+/* A soft, zenith-coloured pocket behind the white type: it keeps contrast without drawing a shape. */
+#top .reference-hero-copy { isolation: isolate; }
+
+#top .reference-hero-copy::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 25%;
+  width: min(68rem, 130vw);
+  height: min(26rem, 52vh);
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(28, 76, 150, .62), rgba(36, 90, 164, .4) 50%, rgba(60, 116, 186, 0));
+  pointer-events: none;
+}
+
+/* Kicker: a plain line with a tiny halo, not a pill. */
+#top .hero-center-kicker {
+  align-items: center;
+  gap: .6rem;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  backdrop-filter: none;
+  color: rgba(255, 252, 244, .94);
+  font-size: .84rem;
+  font-weight: 500;
+  letter-spacing: .005em;
+  line-height: 1.2;
+  text-transform: none;
+  text-shadow: 0 1px 12px rgba(18, 48, 94, .5);
+}
+
+#top .hero-halo-mark {
+  flex: none;
+  width: .8rem;
+  height: .8rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fffdf3 0 22%, transparent 30%);
+  box-shadow: 0 0 0 1.5px rgba(255, 252, 244, .95), inset 0 0 0 1px rgba(255, 140, 100, .85);
+}
+
+/* The heading rows clipped their own descenders (the g in Crafting and digital) and cut the
+   soft shadow into a visible rectangle. They no longer clip; the words still rise and fade in. */
+#top .title-row { overflow: visible; }
+
+/* The intro already sits on the pale band, so it takes the navy ink too. */
+#top .reference-intro {
+  color: var(--hero-ink);
+  text-shadow: 0 0 16px rgba(255, 252, 244, .75);
+}
+
+/* Lower lines sit on the pale horizon band: navy ink instead of white. */
+#top .curated-secondary-link {
+  color: var(--hero-ink);
+  border-bottom-color: color-mix(in srgb, var(--hero-ink) 40%, transparent);
+  text-shadow: 0 0 14px rgba(255, 252, 244, .7);
+}
+
+#top .curated-secondary-link:hover,
+#top .curated-secondary-link:focus-visible { border-bottom-color: var(--hero-ink); }
+
+/* Disciplines on a horizon line, divided by instrument ticks (the same marks as the orbit's top line). */
+#top .hero-disciplines-row {
+  position: relative;
+  align-items: center;
+  gap: 0;
+  padding-bottom: .75rem;
+  color: var(--hero-ink);
+  font-size: .8rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  text-shadow: 0 0 12px rgba(255, 252, 244, .8);
+}
+
+#top .hero-disciplines-row span { padding: 0 1.1rem; opacity: .9; }
+
+#top .hero-disciplines-row i {
+  width: 1px;
+  height: .75rem;
+  background: currentColor;
+  opacity: .4;
+}
+
+#top .hero-disciplines-row::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, currentColor 18%, currentColor 82%, transparent);
+  opacity: .32;
+}
+
+@media (max-width: 480px) {
+  #top .hero-disciplines-row { flex-wrap: nowrap; justify-content: center; font-size: .7rem; white-space: nowrap; }
+  #top .hero-disciplines-row span { padding: 0 .42rem; }
+}

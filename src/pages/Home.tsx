@@ -6,6 +6,7 @@ import { ProjectOrbitShowcase } from '../components/home/ProjectOrbitShowcase'
 import { IntroLoader } from '../components/home/IntroLoader'
 import { WeatheredHorizonsPrototype } from '../components/home/WeatheredHorizonsPrototype'
 import { HeroSky } from '../components/home/HeroSky'
+import '../components/home/HeroInk.css'
 import { PageSkyAmbient } from '../components/home/PageSkyAmbient'
 import { AboutSky } from '../components/home/AboutSky'
 import { ContactSky } from '../components/home/ContactSky'
@@ -83,7 +84,8 @@ export function Home() {
             animate={reduceMotion || heroReady ? { y: 0, opacity: 1 } : { y: 18, opacity: 0 }}
             transition={{ delay: 0.02, duration: 0.72, ease: [0.16, 1, 0.3, 1] }}
           >
-            SOFTWARE ENGINEERING STUDENT — INDONESIA
+            <span className="hero-halo-mark" aria-hidden="true" />
+            Software engineering student, Indonesia
           </motion.p>
 
           {/* Master Editorial Title */}
@@ -130,11 +132,11 @@ export function Home() {
 
           {/* Quiet Disciplines Row */}
           <div className="hero-disciplines-row" aria-label="Core disciplines">
-            <span>✦ Frontend Development</span>
-            <i>·</i>
-            <span>✦ API Integration</span>
-            <i>·</i>
-            <span>✦ Software Quality</span>
+            <span>Frontend development</span>
+            <i aria-hidden="true" />
+            <span>API integration</span>
+            <i aria-hidden="true" />
+            <span>Software quality</span>
           </div>
         </motion.div>
 
