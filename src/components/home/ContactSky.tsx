@@ -49,7 +49,7 @@ export function ContactSky() {
           <span>I’d love to hear about it.</span>
         </h2>
         <p className="contact-editorial-intro">
-          Open to frontend development opportunities, internships, and collaborations.
+          Open to internship opportunities in software development, quality assurance, and data-related roles, as well as collaborative projects.
         </p>
 
         {profile.email && (

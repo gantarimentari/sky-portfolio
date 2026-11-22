@@ -24,9 +24,7 @@ export function AboutSky() {
             <span> grounded in how systems work.</span>
           </h2>
           <p>
-           Software Engineering Technology student at Universitas Gadjah Mada with hands-on experience in web & mobile application development, API 
-            integration, and software testing. Experienced in developing frontend applications using React, Next.js, vue.js, and Flutter, performing automated UI 
-            testing with Java and Selenium, and working with Python for data analysis and machine learning projects.
+            I&apos;m a Software Engineering Technology student at Universitas Gadjah Mada with hands-on experience in web application development, API integration, and software testing.
           </p>
         </div>
       </motion.header>
@@ -38,13 +36,12 @@ export function AboutSky() {
       >
         <div className="about-editorial-story">
           <p className="about-editorial-lead">
-            I enjoy turning ideas and requirements into digital experiences that are
-            easy to understand and practical to use.
+            I enjoy turning ideas into practical applications, from designing interfaces
+            to understanding how the underlying systems work.
           </p>
           <p>
-            My work begins at the interface, but it does not stop there. Experience
-            with backend integration, APIs, testing, and software delivery helps me
-            understand how the visible product connects to the systems underneath it.
+            My academic work also includes data preprocessing, analysis, visualization,
+            and machine learning.
           </p>
           <p>
             I continue to learn through collaborative work and practical projects—by
@@ -57,15 +54,15 @@ export function AboutSky() {
           <div className="about-editorial-points">
             <article>
               <strong>From requirements to interface</strong>
-              <p>I translate product ideas into working screens with clear structure and purposeful interaction.</p>
+              <p>I translate product requirements into structured, working interfaces.</p>
             </article>
             <article>
-              <strong>Awareness beyond the frontend</strong>
-              <p>I consider data, APIs, testing, and delivery decisions that shape the final user experience.</p>
+              <strong>System awareness</strong>
+              <p>I consider the APIs, data, testing, and delivery decisions behind the visible product.</p>
             </article>
             <article>
-              <strong>Practical collaboration</strong>
-              <p>I work openly with others, learn from feedback, and help turn shared decisions into reliable outcomes.</p>
+              <strong>Collaborative development</strong>
+              <p>I communicate progress, respond to feedback, and work through implementation decisions with a team.</p>
             </article>
           </div>
         </div>

@@ -23,7 +23,7 @@ export function PageSkyAmbient({ progress, reducedMotion = false }: { progress: 
     <motion.div className="page-sky-stars" style={reducedMotion ? undefined : { opacity: starsOpacity }} />
     <motion.div className="page-cloud-loop page-cloud-loop-back" style={reducedMotion ? undefined : { opacity: backCloudOpacity }}>
       <div className="page-cloud-track">
-        <img src="/assets/hero-cloud-bank-v2.png" alt="" />
+        <img src="/assets/hero-cloud-bank-v2.png" alt="" loading="eager" decoding="async" fetchPriority="high" />
         <img src="/assets/hero-cloud-bank-v2.png" alt="" />
         <img src="/assets/hero-cloud-bank-v2.png" alt="" />
         <img src="/assets/hero-cloud-bank-v2.png" alt="" />

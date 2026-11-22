@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -7632,8 +7631,12 @@ body:has(.reference-home) .availability { color:#fff; border-color:rgba(255,255,
 .reference-home .reference-marquee { background:#ffd16f; }
 
 /* The intro opens into the sky; no portal or symbolic object is introduced. */
-.reference-home .intro-loader { color:#fff; background:linear-gradient(180deg,#487fc2,#83b5e4 68%,#e9dce0); clip-path:inset(0); animation:intro-sky-exit .88s 1.72s cubic-bezier(.76,0,.24,1) forwards; }
-.reference-home .loader-word { color:#fffaf0; text-shadow:0 .1em 1em rgba(30,65,115,.24); transform-origin:center; animation:loader-word-sky .72s 1.04s cubic-bezier(.55,0,.2,1) forwards; }
+.reference-home .intro-loader { color:#fff; background:linear-gradient(180deg,#487fc2,#83b5e4 68%,#e9dce0); clip-path:inset(0); animation:none; }
+.reference-home .intro-loader.is-exiting { animation:intro-sky-exit .88s cubic-bezier(.76,0,.24,1) forwards; }
+.reference-home .loader-word { color:#fffaf0; text-shadow:0 .1em 1em rgba(30,65,115,.24); transform-origin:center; animation:none; }
+.reference-home .loader-center p { animation:none; }
+.reference-home .intro-loader.is-exiting .loader-word { animation:loader-word-sky .72s cubic-bezier(.55,0,.2,1) forwards; }
+.reference-home .intro-loader.is-exiting .loader-center p { animation:loader-meta-fold .52s ease forwards; }
 .reference-home .loader-word span:nth-child(5) { color:#fff0a8; background:transparent; }
 .reference-home .loader-center p,.reference-home .loader-top { color:rgba(255,255,255,.72); }
 .reference-home .loader-track { background:rgba(255,255,255,.28); }.reference-home .loader-track i { background:#fff0a8; }

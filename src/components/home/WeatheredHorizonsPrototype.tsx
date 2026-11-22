@@ -85,7 +85,7 @@ export function WeatheredHorizonsPrototype() {
           <p className="beyond-code-context">Experience</p>
           <h2 id="beyond-code-title">Beyond the Code</h2>
         </div>
-        <p>Communities, committees, and experiences that shaped how I learn and collaborate.</p>
+        <p>Technical communities, competitions, mentoring, and organizational involvement that shaped how I build and collaborate.</p>
       </header>
 
       <nav className="beyond-code-filters" aria-label="Filter experiences">

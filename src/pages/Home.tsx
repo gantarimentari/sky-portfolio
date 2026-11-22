@@ -11,16 +11,22 @@ import { PageSkyAmbient } from '../components/home/PageSkyAmbient'
 import { AboutSky } from '../components/home/AboutSky'
 import { ContactSky } from '../components/home/ContactSky'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { hasSeenIntro, prepareInitialViewport } from '../lib/initialViewportReady'
 
 export function Home() {
-  useDocumentTitle('Frontend Developer & Creative Technologist')
+  useDocumentTitle('Larasati Ayu Gantari — Software Engineering Portfolio', true)
   const reduceMotion = useReducedMotion()
-  const [heroReady, setHeroReady] = useState(() => sessionStorage.getItem('ccr-intro-seen') === 'true')
+  const [introSeenOnEntry] = useState(hasSeenIntro)
+  const [heroReady, setHeroReady] = useState(false)
   const revealHero = useCallback(() => setHeroReady(true), [])
   useEffect(() => {
-    const timer = setTimeout(() => setHeroReady(true), 800)
-    return () => clearTimeout(timer)
-  }, [])
+    if (!introSeenOnEntry) return
+    let active = true
+    void prepareInitialViewport().then(() => {
+      if (active) setHeroReady(true)
+    })
+    return () => { active = false }
+  }, [introSeenOnEntry])
   const heroRef = useRef<HTMLElement>(null)
 
   const { scrollYProgress: pageProgress } = useScroll()
@@ -84,7 +90,7 @@ export function Home() {
             animate={reduceMotion || heroReady ? { y: 0, opacity: 1 } : { y: 18, opacity: 0 }}
             transition={{ delay: 0.02, duration: 0.72, ease: [0.16, 1, 0.3, 1] }}
           >
-            FRONTEND DEVELOPER — INDONESIA
+            SOFTWARE ENGINEERING STUDENT — INDONESIA
           </motion.p>
 
           {/* Master Editorial Title */}
@@ -112,7 +118,7 @@ export function Home() {
           </h1>
 
           <p className="reference-intro">
-            I shape interfaces that feel alive, tactile, and effortless—bringing design intuition, fluid motion, and robust frontend engineering into one natural experience.
+            I build clear, reliable web applications—combining thoughtful interfaces with an understanding of APIs, testing, and the systems behind them.
           </p>
 
           {/* Refined Magnetic Actions */}
@@ -124,18 +130,18 @@ export function Home() {
               </span>
             </Link>
             <Link className="curated-secondary-link" to="/#contact">
-              <span>Let’s build together</span>
+              <span>Get in touch</span>
               <ArrowUpRight size={15} />
             </Link>
           </div>
 
           {/* Quiet Disciplines Row */}
           <div className="hero-disciplines-row" aria-label="Core disciplines">
-            <span>✦ Interaction Design</span>
+            <span>✦ Frontend Development</span>
             <i>·</i>
-            <span>✦ Creative Frontend</span>
+            <span>✦ API Integration</span>
             <i>·</i>
-            <span>✦ Design Systems</span>
+            <span>✦ Software Quality</span>
           </div>
         </motion.div>
 

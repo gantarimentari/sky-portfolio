@@ -44,19 +44,38 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: 'fanina-company-profile', title: 'Company Profile drh. Fanina', category: 'Frontend / Business Website', role: 'Frontend Developer', accent: 'paper',
-    summary: 'A focused company profile website translating a professional veterinary identity into a clear, approachable web presence.',
-    technologies: ['Next.js', 'React', 'Tailwind CSS'],
+    slug: 'fanina-company-profile', title: 'Company Profile drh. Fanina', category: 'Frontend / Business Website', role: 'Frontend Developer · Automated UI Testing', accent: 'paper',
+    summary: 'A responsive company profile website developed for a veterinary business, with automated UI testing covering key authentication and profile workflows.',
+    technologies: ['Next.js', 'React', 'Tailwind CSS', 'Java', 'Selenium'],
     screenshot: { src: veterinaryScreenshot, alt: 'Veterinary company profile website interface showcase' },
     sections: [
       { title: 'Project Overview', body: 'A responsive company profile website built for drh. Fanina.' },
-      { title: 'My Role', body: 'Developed the frontend experience using Next.js, React, and Tailwind CSS.' },
-      { title: 'Technology Stack', body: 'Next.js, React, and Tailwind CSS.' },
+      { title: 'My Role', body: 'Developed the frontend experience and contributed to automated UI testing using Java and Selenium.' },
+      { title: 'Testing / Validation', body: 'Automated UI testing covered positive and negative authentication scenarios, empty-field validation, profile viewing and editing, and assertions comparing expected and actual behavior.' },
+      { title: 'Technology Stack', body: 'Next.js, React, Tailwind CSS, Java, and Selenium.' },
     ],
   },
   { slug: 'dont-forget-sleep', title: "Don't Forget Sleep", category: 'Web Application / Personal Project', role: 'Personal Project', accent: 'grid', summary: 'A sleep tracking application exploring how simple digital tools can support more intentional rest habits.', technologies: ['Details in progress'], screenshot: { src: sleepScreenshot, alt: "Don't Forget Sleep application interface showcase" } },
-  { slug: 'career-fit-ai', title: 'Career Fit AI', category: 'AI-Related Application', role: 'Project concept', accent: 'beam', summary: 'A job-matching concept exploring how AI might help people compare opportunities with their interests and profile.', technologies: ['Details in progress'], screenshot: { src: careerFitScreenshot, alt: 'Career Fit AI application interface showcase' } },
-  { slug: 'sift', title: 'SIFT', category: 'AI-Related Application', role: 'Project concept', accent: 'orbit', summary: 'An AI recruitment screening concept. Further implementation details and project context will be added as the work develops.', technologies: ['Details in progress'], screenshot: { src: siftScreenshot, alt: 'SIFT AI-powered hiring dashboard interface showcase' } },
+  {
+    slug: 'career-fit-ai', title: 'Career Fit AI', category: 'AI-Related Application', role: 'Frontend Developer · UI/UX Designer', accent: 'beam',
+    summary: 'An AI-assisted CV screening and job-matching platform developed for GEMASTIK 2026 by a selected UGM contingent. I contributed to the frontend development and UI/UX design.',
+    technologies: [],
+    screenshot: { src: careerFitScreenshot, alt: 'Career Fit AI application interface showcase' },
+    sections: [
+      { title: 'Project Overview', body: 'Career Fit AI is an AI-assisted CV screening and job-matching platform developed for GEMASTIK 2026 by a selected UGM contingent.' },
+      { title: 'My Role', body: 'Designed the user interface and contributed to the frontend development of the platform.' },
+    ],
+  },
+  {
+    slug: 'sift', title: 'SIFT', category: 'AI-Related Application', role: 'Frontend Developer · Collaborative Project', accent: 'orbit',
+    summary: 'An AI-powered recruitment platform developed with the GDGoC UGM project team. I contributed to the frontend using Next.js and Tailwind CSS.',
+    technologies: ['Next.js', 'Tailwind CSS'],
+    screenshot: { src: siftScreenshot, alt: 'SIFT AI-powered hiring dashboard interface showcase' },
+    sections: [
+      { title: 'Project Overview', body: 'SIFT is an AI-powered recruitment platform developed within a GDGoC UGM project team.' },
+      { title: 'My Role', body: 'Contributed to the frontend implementation using Next.js and Tailwind CSS.' },
+    ],
+  },
 ]
 
 export const getProject = (slug?: string) => projects.find((project) => project.slug === slug)
