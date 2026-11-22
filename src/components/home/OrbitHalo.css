@@ -306,7 +306,7 @@
 #selected-work .orbit-archive-selector {
   --archive-ink: #0b1e3a;
   --card-w: clamp(11rem, 17vw, 15rem);
-  --poster-scale: 1.9;
+  --poster-scale: var(--archive-scale, 1.9); /* set from archiveScale() in ProjectOrbitShowcase */
   --poster-y: -10vh;
   --poster-w: calc(var(--card-w) * var(--poster-scale));
   --poster-h: calc(var(--poster-w) * 9 / 16);
@@ -361,7 +361,7 @@
 
 /* The others fan out behind the front poster like a hand of cards. */
 #selected-work .orbit-archive-poster {
-  transform: translate(-50%, -50%) translate(calc(var(--o) * 2.4rem), calc(var(--a) * -.25rem)) rotate(calc(var(--o) * 2.6deg)) scale(calc(1 - var(--a) * .06));
+  transform: translate(-50%, -50%) translate(calc(var(--o) * var(--poster-w) * .053), calc(var(--a) * var(--poster-w) * -.0055)) rotate(calc(var(--o) * 2.6deg)) scale(calc(1 - var(--a) * .06));
   opacity: calc(1 - var(--a) * .14);
 }
 
@@ -371,7 +371,7 @@
   top: calc(50% + var(--poster-y) + var(--poster-h) / 2 + clamp(1.2rem, 3vh, 2rem));
   left: 50%;
   translate: -50% 0;
-  width: min(36rem, 90vw);
+  width: min(max(36rem, 52vh), 90vw);
   text-align: center;
 }
 
@@ -379,7 +379,7 @@
   display: inline-flex;
   align-items: center;
   gap: .9rem;
-  font-size: .78rem;
+  font-size: clamp(.78rem, 1.15vh, 1rem);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
@@ -390,8 +390,8 @@
 #selected-work .orbit-archive-count button {
   display: grid;
   place-items: center;
-  width: 2rem;
-  height: 2rem;
+  width: clamp(2rem, 3vh, 2.6rem);
+  height: clamp(2rem, 3vh, 2.6rem);
   padding: 0;
   border: 1px solid color-mix(in srgb, var(--archive-ink) 30%, transparent);
   border-radius: 50%;
@@ -408,7 +408,7 @@
 #selected-work .orbit-archive-meta h3 {
   margin: .5rem 0 .35rem;
   color: var(--archive-ink);
-  font-size: clamp(1.4rem, 2.2vw, 2.1rem);
+  font-size: clamp(1.4rem, 3.6vh, 2.8rem);
   letter-spacing: -.035em;
   line-height: 1.08;
 }
@@ -416,9 +416,9 @@
 #selected-work .orbit-archive-meta > p {
   display: block;
   margin: 0 auto;
-  max-width: 34rem;
+  max-width: max(34rem, 40vh);
   color: var(--archive-ink);
-  font-size: .9rem;
+  font-size: clamp(.9rem, 1.35vh, 1.15rem);
   line-height: 1.5;
 }
 
@@ -431,7 +431,7 @@
   list-style: none;
 }
 
-#selected-work .orbit-archive-meta li { padding: 0 .6rem; border: 0; border-radius: 0; background: none; color: var(--archive-ink); font-size: .74rem; font-weight: 600; }
+#selected-work .orbit-archive-meta li { padding: 0 .6rem; border: 0; border-radius: 0; background: none; color: var(--archive-ink); font-size: clamp(.74rem, 1.1vh, .95rem); font-weight: 600; }
 #selected-work .orbit-archive-meta li + li { border-left: 1px solid color-mix(in srgb, var(--archive-ink) 35%, transparent); }
 
 #selected-work .orbit-archive-actions { display: flex; justify-content: center; gap: 1.6rem; margin-top: .9rem; }
@@ -443,7 +443,7 @@
   padding-bottom: .2rem;
   border-bottom: 1px solid color-mix(in srgb, var(--archive-ink) 40%, transparent);
   color: var(--archive-ink);
-  font-size: .72rem;
+  font-size: clamp(.72rem, 1.05vh, .92rem);
   font-weight: 750;
   letter-spacing: .04em;
   text-transform: uppercase;
@@ -454,7 +454,7 @@
 
 /* Phones: the card is 27vw there, so a bigger scale. */
 @media (max-width: 680px) {
-  #selected-work .orbit-archive-selector { --card-w: 27vw; --poster-scale: 2.8; --poster-y: -16vh; inset: 0; display: block; overflow: visible; }
+  #selected-work .orbit-archive-selector { --card-w: 27vw; --poster-y: -16vh; inset: 0; display: block; overflow: visible; }
   #selected-work .orbit-archive-count em { display: none; }
   #selected-work .orbit-archive-actions { gap: 1.1rem; }
   #selected-work .orbit-archive-actions a { font-size: .66rem; white-space: nowrap; }

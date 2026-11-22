@@ -22,6 +22,15 @@ const ease = (value: number) => { const t = clamp(value); return t < .5 ? 4 * t 
 const getOrbitTurn = (progress: number) => clamp((progress - ORBIT_START) / (ORBIT_END - ORBIT_START)) * (projects.length - 1)
 const getRevealIndex = (progress: number) => Math.min(projects.length - 1, Math.max(0, Math.floor((progress - REVEAL_START) / REVEAL_SLICE)))
 
+// The archive poster is the orbit card scaled up. Its height follows the screen (about a third of it,
+// capped at 46% of the width), so it stays in proportion from a laptop to a 27-inch display.
+// The card is clamp(11rem, 17vw, 15rem) wide on desktop and 27vw on phones (index.css).
+function archiveScale(compactViewport: boolean) {
+  if (compactViewport) return 2.8
+  const card = Math.min(240, Math.max(176, innerWidth * .17))
+  return Math.max(1.6, Math.min(innerHeight * .32 * 16 / 9, innerWidth * .46) / card)
+}
+
 function cardGeometry(index: number, progress: number, compactViewport: boolean) {
   const side = index % 2 === 0 ? 1 : -1
   const deckX = (index - 2.5) * .11
@@ -69,7 +78,7 @@ function cardGeometry(index: number, progress: number, compactViewport: boolean)
     const archiveY = (compactViewport ? -16 : -10) + (index - 2.5) * .48
     x = mix(orbitX, archiveX, archiveGather)
     y = mix(orbitY, archiveY, archiveGather)
-    scale = mix(1, compactViewport ? 2.8 : 1.9, archiveGather)
+    scale = mix(1, archiveScale(compactViewport), archiveGather)
     opacity = 1 - previewHandoff
     rotate = mix(0, (index - 2.5) * .7, archiveGather)
     z = 20 - index
@@ -158,6 +167,13 @@ export function ProjectOrbitShowcase() {
       prepareProjectPosters(posterSources, directProjectEntry ? posterSources.length : 2)
     })
     return () => { active = false }
+  }, [])
+
+  useEffect(() => {
+    const syncArchiveScale = () => sectionRef.current?.style.setProperty('--archive-scale', String(archiveScale(window.matchMedia('(max-width: 680px)').matches)))
+    syncArchiveScale()
+    addEventListener('resize', syncArchiveScale)
+    return () => removeEventListener('resize', syncArchiveScale)
   }, [])
 
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end end'] })
