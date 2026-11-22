@@ -1,4 +1,4 @@
-import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Link } from 'react-router'
 import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform, type MotionValue } from 'motion/react'
@@ -95,6 +95,19 @@ const OrbitCard = memo(forwardRef<HTMLElement, OrbitCardProps>(function OrbitCar
     </Link>
   </article>
 }), (previous, next) => previous.project === next.project && previous.active === next.active && previous.selected === next.selected)
+
+// Each project's own colour, sampled from its poster; the sun at the centre of the halo takes it on.
+const PROJECT_TINT: Record<string, string> = {
+  'apd-detection': '#5a1a8c',
+  placelog: '#295f48',
+  'fanina-company-profile': '#2a76b8',
+  'dont-forget-sleep': '#54348f',
+  'career-fit-ai': '#e7ac10',
+  sift: '#206ca8',
+}
+
+// New project copy rises in softly instead of swapping in place.
+const focusEnter = (delay: number) => ({ initial: { opacity: 0, y: 8 }, animate: { opacity: 1, y: 0 }, transition: { duration: .45, delay, ease: [.16, 1, .3, 1] as const } })
 
 // The navigation is a miniature of the orbit: each point turns with its card, the front one is the open project.
 function HaloPoint({ index, progress, active, label, onSelect }: { index: number; progress: MotionValue<number>; active: boolean; label: string; onSelect: () => void }) {
@@ -202,10 +215,11 @@ export function ProjectOrbitShowcase() {
 
   if (reduceMotion) return <StaticArchive />
   const activeProject = projects[activeIndex]
+  const activeStack = activeProject.technologies.filter(item => item !== 'Details in progress')
   const selectedProject = projects[selectorIndex]
   const displayIndex = phase === 'archive' ? selectorIndex : activeIndex
 
-  return <section className={`project-orbit-section orbit-phase-${phase}`} id="selected-work" ref={sectionRef} aria-label="Animated project archive">
+  return <section className={`project-orbit-section orbit-phase-${phase}`} id="selected-work" ref={sectionRef} aria-label="Animated project archive" style={{ '--project-tint': PROJECT_TINT[projects[displayIndex].slug] ?? '#15345d' } as CSSProperties}>
     <div className="project-orbit-sticky">
       <div className="orbit-topline"><span><b>01</b>Project archive</span><span><em className="orbit-ticks" aria-hidden="true">{projects.map((project, index) => <i key={project.slug} className={index <= displayIndex ? 'is-lit' : ''} />)}</em><b>0{displayIndex + 1}</b> / 06 · Six selected projects</span></div>
       <motion.div className="orbit-progress" style={{ scaleX: progressScale }} />
@@ -219,8 +233,10 @@ export function ProjectOrbitShowcase() {
       <motion.div className="orbit-forming-label" style={{ opacity: formationOpacity }}><span>ALL PROJECTS OPENED</span><strong>FORMING THE ORBIT</strong></motion.div>
 
       <motion.aside className="orbit-focus-copy" style={{ opacity: orbitUiOpacity, y: orbitUiY }} aria-live="polite">
-        <p className="eyebrow">PROJECT 0{activeIndex + 1} / {activeProject.category}</p>
-        <h3>{activeProject.title}</h3><p>{activeProject.summary}</p>
+        <motion.p key={`eyebrow-${activeIndex}`} className="eyebrow" {...focusEnter(0)}><b>0{activeIndex + 1}</b>{activeProject.category}</motion.p>
+        <motion.h3 key={`title-${activeIndex}`} {...focusEnter(.04)}>{activeProject.title}</motion.h3>
+        <motion.p key={`summary-${activeIndex}`} {...focusEnter(.08)}>{activeProject.summary}</motion.p>
+        {activeStack.length > 0 && <motion.ul key={`stack-${activeIndex}`} className="orbit-focus-stack" aria-label="Technologies" {...focusEnter(.12)}>{activeStack.map(item => <li key={item}>{item}</li>)}</motion.ul>}
         <div className="orbit-focus-actions"><Link to={`/work/${activeProject.slug}`}>View project <ArrowRight size={15} /></Link><Link to="/work">All six projects</Link></div>
       </motion.aside>
 

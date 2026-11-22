@@ -6,9 +6,17 @@
  * Every glow is a static gradient: only opacity and transform ever change.
  * The #selected-work prefix outranks the layered overrides in index.css without touching them.
  */
+/* Registered so the sun's colour glides from one project to the next instead of jumping. */
+@property --project-tint {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #15345d;
+}
+
 #selected-work.project-orbit-section {
+  transition: --project-tint .8s ease;
+  --tint-ink: oklch(from var(--project-tint) min(l, .36) c h); /* capped lightness keeps every tint readable as ink */
   --halo-ink: var(--project-ink, #15345d);
-  --halo-warm: #7c3217;
   --halo-rx: 31vw;
   --halo-ry: 29vh;
 }
@@ -79,15 +87,58 @@
   inset: -62% -36%;
   border-radius: 50%;
   background: radial-gradient(closest-side,
-    rgba(255, 253, 246, .58) 0 16%,
-    rgba(255, 249, 232, .4) 40%,
-    rgba(255, 244, 220, .16) 66%,
-    rgba(255, 240, 212, .05) 84%,
+    color-mix(in srgb, var(--project-tint) 6%, rgba(255, 253, 246, .6)) 0 16%,
+    color-mix(in srgb, var(--project-tint) 14%, rgba(255, 249, 232, .42)) 40%,
+    color-mix(in srgb, var(--project-tint) 22%, rgba(255, 244, 220, .2)) 66%,
+    color-mix(in srgb, var(--project-tint) 10%, rgba(255, 240, 212, .06)) 84%,
     rgba(255, 238, 206, 0));
   pointer-events: none;
 }
 
-#selected-work .orbit-focus-copy .eyebrow { color: var(--halo-warm); }
+/* Label: the project number in its own colour, a hairline, then the category in plain case. */
+#selected-work .orbit-focus-copy .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  color: color-mix(in srgb, var(--halo-ink) 80%, transparent);
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+#selected-work .orbit-focus-copy .eyebrow b {
+  color: var(--tint-ink);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+#selected-work .orbit-focus-copy .eyebrow b::after {
+  content: '';
+  display: inline-block;
+  width: 1.4rem;
+  height: 1px;
+  margin: 0 0 .25em .6rem;
+  vertical-align: middle;
+  background: currentColor;
+  opacity: .6;
+}
+
+/* Stack as a quiet readout, divided by the same ticks as the hero and the top line. */
+#selected-work .orbit-focus-stack {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: .2rem 0 1rem;
+  padding: 0;
+  list-style: none;
+  color: var(--tint-ink);
+  font-size: .74rem;
+  font-weight: 600;
+}
+
+#selected-work .orbit-focus-stack li { padding: 0 .6rem; }
+#selected-work .orbit-focus-stack li + li { border-left: 1px solid color-mix(in srgb, currentColor 35%, transparent); }
 #selected-work .orbit-focus-copy h3 { color: var(--halo-ink); }
 #selected-work .orbit-focus-copy > p:not(.eyebrow) { color: color-mix(in srgb, var(--halo-ink) 78%, transparent); }
 
@@ -98,7 +149,7 @@
 }
 
 #selected-work .orbit-focus-actions a:hover,
-#selected-work .orbit-focus-actions a:focus-visible { border-bottom-color: var(--halo-warm); }
+#selected-work .orbit-focus-actions a:focus-visible { border-bottom-color: var(--tint-ink); }
 
 /* Navigation: prev / a small halo whose points turn with the cards / next. */
 #selected-work .orbit-navigation {
