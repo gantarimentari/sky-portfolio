@@ -1,4 +1,4 @@
-import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Link } from 'react-router'
 import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform, type MotionValue } from 'motion/react'
@@ -64,11 +64,12 @@ function cardGeometry(index: number, progress: number, compactViewport: boolean)
   if (progress > ARCHIVE_START) {
     const archiveGather = ease((progress - ARCHIVE_START) / .105)
     const previewHandoff = ease((progress - (ARCHIVE_START + .035)) / .055)
-    const archiveX = (compactViewport ? -27 : 11) + (index - 2.5) * .14
-    const archiveY = (compactViewport ? -32 : 4) + index * .48
+    // Gather onto the centred archive poster (OrbitHalo.css: --poster-y and --poster-scale).
+    const archiveX = (index - 2.5) * .14
+    const archiveY = (compactViewport ? -13 : -4) + (index - 2.5) * .48
     x = mix(orbitX, archiveX, archiveGather)
     y = mix(orbitY, archiveY, archiveGather)
-    scale = mix(1, compactViewport ? 1.4 : 1.35, archiveGather)
+    scale = mix(1, compactViewport ? 2.8 : 1.9, archiveGather)
     opacity = 1 - previewHandoff
     rotate = mix(0, (index - 2.5) * .7, archiveGather)
     z = 20 - index
@@ -136,6 +137,8 @@ export function ProjectOrbitShowcase() {
   const reduceMotion = useReducedMotion()
   const [activeIndex, setActiveIndex] = useState(0)
   const [selectorIndex, setSelectorIndex] = useState(0)
+  // shortcut: ?archive=carousel switches the archive arrangement for side-by-side review; drop once one is chosen.
+  const [archiveVariant] = useState(() => new URLSearchParams(window.location.search).get('archive') === 'carousel' ? 'carousel' : 'deck')
   const [phase, setPhase] = useState<'reveal' | 'form' | 'orbit' | 'archive'>('reveal')
   const activeIndexRef = useRef(activeIndex)
   const phaseRef = useRef(phase)
@@ -236,19 +239,24 @@ export function ProjectOrbitShowcase() {
         <div className="orbit-halo-map">{projects.map((project, index) => <HaloPoint key={project.slug} index={index} progress={animationProgress} active={index === activeIndex} label={`Show project ${index + 1}: ${project.title}`} onSelect={() => goToProject(index)} />)}</div>
         <button type="button" onClick={() => goToProject(Math.min(projects.length - 1, activeIndex + 1))} disabled={activeIndex === projects.length - 1} aria-label="Next project"><ChevronRight size={17} /></button>
       </motion.nav>
-      <motion.div className="orbit-archive-selector" style={{ opacity: archiveOpacity, y: archiveY }}>
-        <div className="orbit-archive-index">
-          <p className="orbit-archive-label"><b>06</b>Project index</p><h2>Choose the work<br /><em>you want to open.</em></h2>
-          <div className="orbit-archive-rows">{projects.map((project, index) => <button type="button" className={selectorIndex === index ? 'is-active' : ''} aria-pressed={selectorIndex === index} onMouseEnter={() => setSelectorIndex(index)} onFocus={() => setSelectorIndex(index)} onClick={() => setSelectorIndex(index)} key={project.slug}><span>0{index + 1}</span><strong>{project.title}</strong><small>{project.category}</small><i aria-hidden="true"><ArrowRight size={15} /></i></button>)}</div>
-          <Link className="orbit-all-work" to="/work">Explore complete archive <ArrowRight size={16} /></Link>
+      <motion.div className={`orbit-archive-selector archive-${archiveVariant}`} style={{ opacity: archiveOpacity, y: archiveY }}>
+        <div className="orbit-archive-head"><p className="orbit-archive-label"><b>06</b>Project index</p><h2>Choose the work you want to open.</h2></div>
+        <div className="orbit-archive-stage">
+          {projects.map((project, index) => <div key={project.slug} className={`orbit-archive-poster${index === selectorIndex ? ' is-active' : ''}`} style={{ '--o': index - selectorIndex } as CSSProperties}>
+            {index === selectorIndex
+              ? <Link to={`/work/${project.slug}`} aria-label={`Open ${project.title} case study`}><ProjectPoster project={project} /></Link>
+              : <button type="button" onClick={() => setSelectorIndex(index)} aria-label={`Show project ${index + 1}: ${project.title}`} tabIndex={Math.abs(index - selectorIndex) > 1 ? -1 : 0}><ProjectPoster project={project} /></button>}
+          </div>)}
         </div>
-        <div className="orbit-archive-preview">
-          <div className="orbit-final-deck">
-            <Link to={`/work/${selectedProject.slug}`} aria-label={`Open ${selectedProject.title} case study`}>
-              <ProjectPoster project={selectedProject} />
-            </Link>
+        <div className="orbit-archive-meta">
+          <div className="orbit-archive-count">
+            <button type="button" onClick={() => setSelectorIndex(Math.max(0, selectorIndex - 1))} disabled={selectorIndex === 0} aria-label="Previous project"><ChevronLeft size={16} /></button>
+            <span aria-live="polite"><b>0{selectorIndex + 1}</b> / 06<em> · {selectedProject.category}</em></span>
+            <button type="button" onClick={() => setSelectorIndex(Math.min(projects.length - 1, selectorIndex + 1))} disabled={selectorIndex === projects.length - 1} aria-label="Next project"><ChevronRight size={16} /></button>
           </div>
-          <div className="orbit-archive-meta"><p className="orbit-archive-label"><b>0{selectorIndex + 1}</b>{selectedProject.role}</p><h3>{selectedProject.title}</h3><p>{selectedProject.summary}</p>{selectedStack.length > 0 && <ul aria-label="Technologies">{selectedStack.map(item => <li key={item}>{item}</li>)}</ul>}<Link to={`/work/${selectedProject.slug}`}>View case study <ArrowRight size={16} /></Link></div>
+          <h3>{selectedProject.title}</h3><p>{selectedProject.summary}</p>
+          {selectedStack.length > 0 && <ul aria-label="Technologies">{selectedStack.map(item => <li key={item}>{item}</li>)}</ul>}
+          <div className="orbit-archive-actions"><Link to={`/work/${selectedProject.slug}`}>View case study <ArrowRight size={15} /></Link><Link to="/work">Explore complete archive <ArrowRight size={15} /></Link></div>
         </div>
       </motion.div>
       <p className="orbit-scroll-note">{phase === 'reveal' ? 'SCROLL TO OPEN EACH PROJECT' : phase === 'form' ? 'THE DECK BECOMES AN ORBIT' : phase === 'archive' ? 'SELECT A PROJECT OR CONTINUE' : 'SCROLL OR USE NAVIGATION'} <span aria-hidden="true">↓</span></p>

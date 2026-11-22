@@ -296,14 +296,30 @@
 }
 
 /*
- * Archive at golden hour. By this point the page sky has turned to sunset: low sun means warm light,
- * long shadows tinted plum, and a warm rim on whatever faces it (see the poster below).
+ * Archive. The orbit ends where it began: the six cards gather in the middle of the sky and become
+ * one large poster, centred like the hero and the halo. The front poster is exactly the orbit card
+ * scaled by --poster-scale (frame included), and sits at the point the cards gather to in
+ * cardGeometry, so the cards turn into it without a jump. Two arrangements of the other posters are
+ * on trial: a fanned deck behind the front one, or a carousel drifting off into the sky.
+ * Posters move by transform and opacity only.
  */
-#selected-work .orbit-archive-selector { --archive-ink: #0b1e3a; }
+#selected-work .orbit-archive-selector {
+  --archive-ink: #0b1e3a;
+  --card-w: clamp(11rem, 17vw, 15rem);
+  --poster-scale: 1.9;
+  --poster-y: -4vh;
+  --poster-w: calc(var(--card-w) * var(--poster-scale));
+  --poster-h: calc(var(--poster-w) * 9 / 16);
+  display: block;
+  inset: 0;
+  overflow: visible;
+  color: var(--archive-ink);
+}
 
 #selected-work .orbit-archive-label {
-  display: block;
-  line-height: 1.45;
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
   color: var(--archive-ink);
   font-size: .78rem;
   font-weight: 600;
@@ -311,169 +327,190 @@
   text-transform: none;
 }
 
-#selected-work .orbit-archive-label b { color: var(--archive-ink); font-weight: 800; font-variant-numeric: tabular-nums; }
+#selected-work .orbit-archive-label b { font-weight: 800; font-variant-numeric: tabular-nums; }
 
 #selected-work .orbit-archive-label b::after {
   content: '';
   display: inline-block;
   width: 1.4rem;
   height: 1px;
-  margin: 0 .6rem .25em;
+  margin: 0 0 .25em .6rem;
   vertical-align: middle;
   background: currentColor;
   opacity: .5;
 }
 
-/*
- * Alpenglow. After the sun has set for the valley, high peaks still catch its last direct light:
- * their tops glow orange-pink while everything below is in shade, and the lit band climbs and fades
- * as Earth's shadow rises. The chosen title is the peak. No bands, boxes or lines: only the type
- * itself is lit.
- */
-#selected-work .orbit-archive-rows { position: relative; }
-
-#selected-work .orbit-archive-rows button {
-  position: relative;
-  height: 3.6rem;
-  margin: 0;
-  padding: 0 .1rem;
-  grid-template-columns: 2rem minmax(0, 1fr) minmax(0, 9rem) 1.6rem;
-  gap: .9rem;
-  align-items: center;
-  border: 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--archive-ink) 14%, transparent);
-  border-radius: 0;
-  background: none;
-  color: var(--archive-ink);
-}
-
-#selected-work .orbit-archive-rows button > span { font-size: .74rem; font-weight: 700; font-variant-numeric: tabular-nums; }
-#selected-work .orbit-archive-rows button > strong { overflow: hidden; font-size: 1.32rem; font-weight: 750; letter-spacing: -.03em; line-height: 1.2; white-space: nowrap; text-overflow: ellipsis; }
-#selected-work .orbit-archive-rows button > small { overflow: hidden; font-size: .74rem; font-weight: 500; text-align: right; white-space: nowrap; text-overflow: ellipsis; }
-#selected-work .orbit-archive-rows button > i { display: grid; place-items: center; }
-
-/* The chosen title is lit only along the top edges of its letters (a thin warm rim and a soft glow
-   rising off it), while the letter bodies fall into a plum shade, like peaks in the last light. */
-#selected-work .orbit-archive-rows button > strong {
-  text-shadow: 0 0 0 rgba(255, 207, 166, 0), 0 0 1rem rgba(255, 160, 110, 0);
-  transition: color .6s ease, text-shadow .5s ease;
-}
-
-#selected-work .orbit-archive-rows button.is-active > strong {
-  color: #2a1840;
-  text-shadow: 0 -1.5px 0 rgba(255, 207, 166, .95), 0 -.35rem 1rem rgba(255, 160, 110, .5);
-  transition: color .9s ease, text-shadow .9s cubic-bezier(.16, 1, .3, 1);
-}
-
-#selected-work .orbit-archive-rows button:focus-visible { outline: 2px solid var(--archive-ink); outline-offset: 2px; }
-
-/*
- * Horizon layout (desktop). With a dramatic sunset sky, landscape photographers set the horizon low,
- * near the lower third, and let the sky dominate; the brightest sky then hugs the horizon (the
- * twilight arch). So the index becomes that horizon: the six titles stand on one line across the
- * bottom with a faint glow above it, the poster hangs in the sky above like a sun about to set, and
- * the heading takes the open sky at the top. The poster keeps its exact position, so the orbit's
- * cards still land on it. Phones keep the vertical list.
- */
-@media (min-width: 681px) {
-  #selected-work .orbit-archive-index { align-self: start; margin-top: clamp(2.5rem, 7vh, 5rem); }
-
-  #selected-work .orbit-archive-rows {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 4.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    border: 0;
-  }
-
-  #selected-work .orbit-archive-rows::before,
-  #selected-work .orbit-archive-rows::after {
-    content: '';
-    position: absolute;
-    left: -2%;
-    right: -2%;
-    bottom: 0;
-    pointer-events: none;
-  }
-
-  /* The horizon itself. */
-  #selected-work .orbit-archive-rows::before {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 246, 236, .85) 12%, rgba(255, 246, 236, .85) 88%, transparent);
-  }
-
-  /* Twilight arch: the brightest sky hugs the horizon. */
-  #selected-work .orbit-archive-rows::after {
-    z-index: -1;
-    height: 3rem;
-    background: linear-gradient(to top, rgba(255, 228, 200, .3), rgba(255, 228, 200, 0));
-    mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
-  }
-
-  #selected-work .orbit-archive-rows button {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: .3rem;
-    width: auto;
-    height: auto;
-    padding: 0 0 .7rem;
-    border: 0;
-  }
-
-  #selected-work .orbit-archive-rows button > small,
-  #selected-work .orbit-archive-rows button > i { display: none; }
-
-  #selected-work .orbit-archive-rows button > strong { font-size: clamp(.95rem, 1.25vw, 1.3rem); }
-
-  #selected-work .orbit-archive-rows button:focus-visible { outline-offset: 6px; }
-}
-
-/* The poster under a low sun: a long plum shadow and a warm light across its upper-left edge. */
-#selected-work .orbit-final-deck > a {
-  box-shadow:
-    0 1.4rem 2.4rem -1.1rem rgba(70, 36, 90, .45),
-    2.4rem 2.8rem 3.6rem -1.6rem rgba(118, 50, 86, .32);
-}
-
-#selected-work .orbit-final-deck > a::after {
-  content: '';
+#selected-work .orbit-archive-head {
   position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(118deg, rgba(255, 214, 170, .26), rgba(255, 196, 156, .08) 30%, transparent 52%);
-  box-shadow: inset 1px 1px 0 rgba(255, 236, 212, .6);
-  pointer-events: none;
+  top: clamp(7.4rem, 15.5vh, 10rem);
+  left: 50%;
+  translate: -50% 0;
+  width: min(60rem, 92vw);
+  text-align: center;
 }
 
-#selected-work .orbit-archive-meta h3,
-#selected-work .orbit-archive-meta > p:not(.orbit-archive-label),
-#selected-work .orbit-archive-meta > a,
-#selected-work .orbit-archive-index h2,
-#selected-work .orbit-all-work { color: var(--archive-ink); }
-
-/* Stack: the same tick readout as the orbit, not pills. */
-#selected-work .orbit-archive-meta ul { display: flex; flex-wrap: wrap; gap: 0; margin: .9rem 0 1.1rem; padding: 0; list-style: none; }
-
-#selected-work .orbit-archive-meta li {
-  padding: 0 .6rem;
-  border: 0;
-  border-radius: 0;
-  background: none;
+#selected-work .orbit-archive-head h2 {
+  margin: .55rem 0 0;
   color: var(--archive-ink);
-  font-size: .74rem;
-  font-weight: 600;
+  font-size: clamp(1.7rem, 3vw, 3rem);
+  letter-spacing: -.045em;
+  line-height: 1.02;
+  white-space: nowrap;
+  text-wrap: balance;
 }
 
-#selected-work .orbit-archive-meta li:first-child { padding-left: 0; }
-#selected-work .orbit-archive-meta li + li { border-left: 1px solid color-mix(in srgb, var(--halo-ink) 35%, transparent); }
+/* The stage is a point at the poster's centre; every poster is placed from it. */
+#selected-work .orbit-archive-stage {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + var(--poster-y));
+  width: 0;
+  height: 0;
+}
 
+#selected-work .orbit-archive-poster {
+  --a: max(var(--o), calc(var(--o) * -1));
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--poster-w);
+  height: var(--poster-h);
+  padding: calc(.35rem * var(--poster-scale));
+  border-radius: calc(.8rem * var(--poster-scale));
+  background: #fff;
+  box-shadow: 0 1.4rem 2.6rem -1.2rem rgba(70, 36, 90, .45), 1.6rem 2.4rem 3.4rem -1.8rem rgba(118, 50, 86, .3);
+  z-index: calc(20 - var(--a));
+  transition: transform .75s cubic-bezier(.16, 1, .3, 1), opacity .55s ease;
+}
+
+#selected-work .orbit-archive-poster > a,
+#selected-work .orbit-archive-poster > button {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: calc(.55rem * var(--poster-scale));
+  background: none;
+  cursor: pointer;
+}
+
+#selected-work .orbit-archive-poster .orbit-project-poster,
+#selected-work .orbit-archive-poster picture,
+#selected-work .orbit-archive-poster img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+#selected-work .orbit-archive-poster > :focus-visible { outline: 2px solid var(--archive-ink); outline-offset: 4px; }
+
+/* Deck: the others fan out behind the front poster like a hand of cards. */
+#selected-work .archive-deck .orbit-archive-poster {
+  transform: translate(-50%, -50%) translate(calc(var(--o) * 2.4rem), calc(var(--a) * -.25rem)) rotate(calc(var(--o) * 2.6deg)) scale(calc(1 - var(--a) * .06));
+  opacity: calc(1 - var(--a) * .14);
+}
+
+/* Carousel: the others sit beside it, smaller and fading as they drift off into the sky. */
+#selected-work .archive-carousel .orbit-archive-poster {
+  transform: translate(-50%, -50%) translateX(calc(var(--o) * min(34vw, 30rem))) scale(calc(1 - min(var(--a), 2) * .28));
+  opacity: max(0, calc(1 - var(--a) * .42));
+}
+
+/* Copy under the poster, centred. */
+#selected-work .orbit-archive-meta {
+  position: absolute;
+  top: calc(50% + var(--poster-y) + var(--poster-h) / 2 + clamp(1.2rem, 3vh, 2rem));
+  left: 50%;
+  translate: -50% 0;
+  width: min(36rem, 90vw);
+  text-align: center;
+}
+
+#selected-work .orbit-archive-count {
+  display: inline-flex;
+  align-items: center;
+  gap: .9rem;
+  font-size: .78rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+#selected-work .orbit-archive-count b { font-weight: 800; }
+#selected-work .orbit-archive-count em { font-style: normal; }
+
+#selected-work .orbit-archive-count button {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--archive-ink) 30%, transparent);
+  border-radius: 50%;
+  background: rgba(255, 250, 242, .3);
+  color: var(--archive-ink);
+  cursor: pointer;
+  transition: background-color .2s ease, border-color .2s ease;
+}
+
+#selected-work .orbit-archive-count button:hover:not(:disabled),
+#selected-work .orbit-archive-count button:focus-visible { border-color: var(--archive-ink); background: rgba(255, 250, 242, .7); }
+#selected-work .orbit-archive-count button:disabled { opacity: .3; cursor: default; }
+
+#selected-work .orbit-archive-meta h3 {
+  margin: .5rem 0 .35rem;
+  color: var(--archive-ink);
+  font-size: clamp(1.4rem, 2.2vw, 2.1rem);
+  letter-spacing: -.035em;
+  line-height: 1.08;
+}
+
+#selected-work .orbit-archive-meta > p {
+  display: block;
+  margin: 0 auto;
+  max-width: 34rem;
+  color: var(--archive-ink);
+  font-size: .9rem;
+  line-height: 1.5;
+}
+
+#selected-work .orbit-archive-meta ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: .7rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+#selected-work .orbit-archive-meta li { padding: 0 .6rem; border: 0; border-radius: 0; background: none; color: var(--archive-ink); font-size: .74rem; font-weight: 600; }
+#selected-work .orbit-archive-meta li + li { border-left: 1px solid color-mix(in srgb, var(--archive-ink) 35%, transparent); }
+
+#selected-work .orbit-archive-actions { display: flex; justify-content: center; gap: 1.6rem; margin-top: .9rem; }
+
+#selected-work .orbit-archive-actions a {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding-bottom: .2rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--archive-ink) 40%, transparent);
+  color: var(--archive-ink);
+  font-size: .72rem;
+  font-weight: 750;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+#selected-work .orbit-archive-actions a:hover,
+#selected-work .orbit-archive-actions a:focus-visible { border-bottom-color: var(--archive-ink); }
+
+/* Phones: the card is 27vw there, so a bigger scale; the heading may wrap. */
 @media (max-width: 680px) {
-  #selected-work .orbit-archive-rows button { height: 3rem; grid-template-columns: 1.6rem minmax(0, 1fr) 1.4rem; gap: .6rem; }
-  #selected-work .orbit-archive-rows button > small { display: none; }
-  #selected-work .orbit-archive-rows button > strong { font-size: 1.05rem; }
-  #selected-work .orbit-archive-rows button > i { grid-column: 3; }
+  #selected-work .orbit-archive-selector { --card-w: 27vw; --poster-scale: 2.8; --poster-y: -13vh; inset: 0; display: block; overflow: visible; }
+  #selected-work .orbit-archive-head { top: 7.4rem; }
+  #selected-work .orbit-archive-head h2 { font-size: 1.6rem; white-space: normal; }
+  #selected-work .orbit-archive-count em { display: none; }
+  #selected-work .orbit-archive-actions { gap: 1.1rem; }
+  #selected-work .orbit-archive-actions a { font-size: .66rem; white-space: nowrap; }
+  #selected-work .archive-deck .orbit-archive-poster {
+    transform: translate(-50%, -50%) translate(calc(var(--o) * 1.1rem), calc(var(--a) * -.3rem)) rotate(calc(var(--o) * 2.2deg)) scale(calc(1 - var(--a) * .05));
+  }
+  #selected-work .orbit-archive-meta > p { font-size: .84rem; }
 }
