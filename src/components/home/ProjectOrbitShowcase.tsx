@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from 'react'
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Link } from 'react-router'
-import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from 'motion/react'
+import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform, type MotionValue } from 'motion/react'
 import { projects, type Project } from '../../data/projects'
 
 const REVEAL_START = .025
@@ -14,7 +14,8 @@ const REVEAL_SLICE = (REVEAL_END - REVEAL_START) / projects.length
 
 const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value))
 const mix = (from: number, to: number, progress: number) => from + (to - from) * progress
-const ease = (value: number) => 1 - Math.pow(1 - clamp(value), 3)
+// Ease in and out: each segment starts from rest, so a card never snaps from still to full speed.
+const ease = (value: number) => { const t = clamp(value); return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2 }
 const getOrbitTurn = (progress: number) => clamp((progress - ORBIT_START) / (ORBIT_END - ORBIT_START)) * (projects.length - 1)
 const getRevealIndex = (progress: number) => Math.min(projects.length - 1, Math.max(0, Math.floor((progress - REVEAL_START) / REVEAL_SLICE)))
 
@@ -109,7 +110,8 @@ export function ProjectOrbitShowcase() {
   const [selectorIndex, setSelectorIndex] = useState(0)
   const [phase, setPhase] = useState<'reveal' | 'form' | 'orbit' | 'archive'>('reveal')
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end end'] })
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 175, damping: 30, mass: .28, restDelta: .00025 })
+  // Lenis already eases the scroll; a spring on top made the cards trail and wobble.
+  const smoothProgress = scrollYProgress
   const progressScale = useTransform(smoothProgress, [0, 1], [0, 1])
   const revealOpacity = useTransform(smoothProgress, [0, .02, REVEAL_END - .02, FORMATION_START], [0, 1, 1, 0])
   const revealY = useTransform(smoothProgress, [0, .04], [18, 0])
