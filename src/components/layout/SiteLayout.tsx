@@ -18,7 +18,11 @@ export function SiteLayout({ children }: PropsWithChildren) {
     return () => lenis.destroy()
   }, [])
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }) }, [location.pathname])
-  useEffect(() => { if (location.hash) requestAnimationFrame(() => document.querySelector(location.hash)?.scrollIntoView()) }, [location.hash, location.pathname])
+  useEffect(() => {
+    if (!location.hash) return
+    const target = location.hash === '#projects' ? '#work' : location.hash
+    requestAnimationFrame(() => document.querySelector(target)?.scrollIntoView())
+  }, [location.hash, location.pathname])
   useEffect(() => {
     let frame = 0
     const updateNav = () => {

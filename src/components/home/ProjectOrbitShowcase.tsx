@@ -1,8 +1,10 @@
-import { useCallback, useRef, useState } from 'react'
+import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Link } from 'react-router'
 import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform, type MotionValue } from 'motion/react'
 import { projects, type Project } from '../../data/projects'
+import { prepareInitialViewport } from '../../lib/initialViewportReady'
+import { prepareProjectPosters } from '../../lib/projectPosterReady'
 import './OrbitHalo.css'
 
 const REVEAL_START = .025
@@ -74,22 +76,25 @@ function cardGeometry(index: number, progress: number, compactViewport: boolean)
   return { x, y, scale, rotate, opacity, z }
 }
 
-function OrbitCard({ project, index, progress, active, selected }: { project: Project; index: number; progress: MotionValue<number>; active: boolean; selected: boolean }) {
-  const compactViewport = window.matchMedia('(max-width: 680px)').matches
-  const geometry = useTransform(progress, current => cardGeometry(index, current, compactViewport))
-  const x = useTransform(geometry, current => `${current.x}vw`)
-  const y = useTransform(geometry, current => `${current.y}vh`)
-  const scale = useTransform(geometry, current => current.scale)
-  const rotate = useTransform(geometry, current => current.rotate)
-  const opacity = useTransform(geometry, current => current.opacity)
-  const zIndex = useTransform(geometry, current => current.z)
-
-  return <motion.article className={`orbit-project-card orbit-project-${index + 1}${active ? ' is-active' : ''}${selected ? ' is-selected' : ''}`} style={{ opacity, x, y, rotate, scale, zIndex }}>
-    <Link to={`/work/${project.slug}`} aria-label={`View ${project.title} project`} tabIndex={active || selected ? 0 : -1}>
-      <ProjectPoster project={project} />
-    </Link>
-  </motion.article>
+interface OrbitCardProps {
+  project: Project
+  index: number
+  initialProgress: number
+  compactViewport: boolean
+  active: boolean
+  selected: boolean
 }
+
+const OrbitCard = memo(forwardRef<HTMLElement, OrbitCardProps>(function OrbitCard({ project, index, initialProgress, compactViewport, active, selected }, ref) {
+  const geometry = cardGeometry(index, initialProgress, compactViewport)
+  const transform = `translate3d(${geometry.x}vw, ${geometry.y}vh, 0) rotate(${geometry.rotate}deg) scale(${geometry.scale})`
+
+  return <article ref={ref} className={`orbit-project-card orbit-project-${index + 1}${active ? ' is-active' : ''}${selected ? ' is-selected' : ''}`} style={{ opacity: geometry.opacity, transform, zIndex: geometry.z }}>
+    <Link to={`/work/${project.slug}`} aria-label={`View ${project.title} project`} tabIndex={active || selected ? 0 : -1}>
+      <ProjectPoster project={project} priority={index < 2} />
+    </Link>
+  </article>
+}), (previous, next) => previous.project === next.project && previous.active === next.active && previous.selected === next.selected)
 
 // The navigation is a miniature of the orbit: each point turns with its card, the front one is the open project.
 function HaloPoint({ index, progress, active, label, onSelect }: { index: number; progress: MotionValue<number>; active: boolean; label: string; onSelect: () => void }) {
@@ -100,10 +105,13 @@ function HaloPoint({ index, progress, active, label, onSelect }: { index: number
   return <motion.button type="button" className={active ? 'is-active' : ''} style={{ x, y, scale }} onClick={onSelect} aria-label={label} aria-current={active ? 'true' : undefined}><span /></motion.button>
 }
 
-function ProjectPoster({ project }: { project: Project }) {
+function ProjectPoster({ project, priority = false }: { project: Project; priority?: boolean }) {
   return <div className={`orbit-project-poster visual-${project.accent}`}>
     {project.screenshot
-      ? <img src={project.screenshot.src} alt={project.screenshot.alt} loading="lazy" decoding="async" />
+      ? <picture>
+          {project.screenshot.webp && <source type="image/webp" srcSet={`${project.screenshot.webp.small} 720w, ${project.screenshot.webp.large} 1120w`} sizes="(max-width: 680px) 72vw, 48vw" />}
+          <img src={project.screenshot.src} alt={project.screenshot.alt} loading={priority ? 'eager' : 'lazy'} fetchPriority={priority ? 'high' : 'auto'} decoding="async" width="16" height="9" />
+        </picture>
       : <div className="visual-object" role="img" aria-label={`Abstract preview for ${project.title}`} />}
   </div>
 }
@@ -117,27 +125,70 @@ function StaticArchive() {
 
 export function ProjectOrbitShowcase() {
   const sectionRef = useRef<HTMLElement>(null)
+  const compactViewport = window.matchMedia('(max-width: 680px)').matches
+  const cardElements = useRef<Array<HTMLElement | null>>(projects.map(() => null))
+  const cardRefCallbacks = useMemo(() => projects.map((_, index) => (element: HTMLElement | null) => {
+    cardElements.current[index] = element
+  }), [])
   const reduceMotion = useReducedMotion()
   const [activeIndex, setActiveIndex] = useState(0)
   const [selectorIndex, setSelectorIndex] = useState(0)
   const [phase, setPhase] = useState<'reveal' | 'form' | 'orbit' | 'archive'>('reveal')
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end end'] })
-  // Lenis already eases the scroll; a spring on top made the cards trail and wobble.
-  const smoothProgress = scrollYProgress
-  const progressScale = useTransform(smoothProgress, [0, 1], [0, 1])
-  const revealOpacity = useTransform(smoothProgress, [0, .02, REVEAL_END - .02, FORMATION_START], [0, 1, 1, 0])
-  const revealY = useTransform(smoothProgress, [0, .04], [18, 0])
-  const formationOpacity = useTransform(smoothProgress, [FORMATION_START, FORMATION_START + .025, ORBIT_START - .035, ORBIT_START], [0, 1, 1, 0])
-  const orbitUiOpacity = useTransform(smoothProgress, [ORBIT_START - .015, ORBIT_START + .025, ARCHIVE_START - .035, ARCHIVE_START], [0, 1, 1, 0])
-  const orbitUiY = useTransform(smoothProgress, [ORBIT_START - .015, ORBIT_START + .035], [20, 0])
-  const archiveOpacity = useTransform(smoothProgress, [ARCHIVE_START + .045, ARCHIVE_START + .085], [0, 1])
-  const archiveY = useTransform(smoothProgress, [ARCHIVE_START + .035, ARCHIVE_START + .09], [26, 0])
+  const activeIndexRef = useRef(activeIndex)
+  const phaseRef = useRef(phase)
 
-  useMotionValueEvent(smoothProgress, 'change', latest => {
+  useEffect(() => {
+    let active = true
+    void prepareInitialViewport().then(() => {
+      if (!active) return
+      const compactViewport = window.matchMedia('(max-width: 680px)').matches
+      const renderedPosterWidth = window.innerWidth * (compactViewport ? .72 : .48)
+      const requestedPosterWidth = renderedPosterWidth * Math.min(window.devicePixelRatio || 1, 2)
+      const posterSources = projects.flatMap((project) => {
+        const screenshot = project.screenshot
+        if (!screenshot) return []
+        if (!screenshot.webp) return [screenshot.src]
+        return [requestedPosterWidth <= 720 ? screenshot.webp.small : screenshot.webp.large]
+      })
+      const directProjectEntry = ['#work', '#selected-work', '#projects'].includes(window.location.hash)
+      prepareProjectPosters(posterSources, directProjectEntry ? posterSources.length : 2)
+    })
+    return () => { active = false }
+  }, [])
+
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end end'] })
+  // Lenis already eases the scroll on every device; a spring on top made the cards trail and wobble.
+  const animationProgress = scrollYProgress
+  const progressScale = useTransform(animationProgress, [0, 1], [0, 1])
+  const revealOpacity = useTransform(animationProgress, [0, .02, REVEAL_END - .02, FORMATION_START], [0, 1, 1, 0])
+  const revealY = useTransform(animationProgress, [0, .04], [18, 0])
+  const formationOpacity = useTransform(animationProgress, [FORMATION_START, FORMATION_START + .025, ORBIT_START - .035, ORBIT_START], [0, 1, 1, 0])
+  const orbitUiOpacity = useTransform(animationProgress, [ORBIT_START - .015, ORBIT_START + .025, ARCHIVE_START - .035, ARCHIVE_START], [0, 1, 1, 0])
+  const orbitUiY = useTransform(animationProgress, [ORBIT_START - .015, ORBIT_START + .035], [20, 0])
+  const archiveOpacity = useTransform(animationProgress, [ARCHIVE_START + .045, ARCHIVE_START + .085], [0, 1])
+  const archiveY = useTransform(animationProgress, [ARCHIVE_START + .035, ARCHIVE_START + .09], [26, 0])
+
+  useMotionValueEvent(animationProgress, 'change', latest => {
+    cardElements.current.forEach((card, index) => {
+      if (!card) return
+      const geometry = cardGeometry(index, latest, compactViewport)
+      card.style.transform = `translate3d(${geometry.x}vw, ${geometry.y}vh, 0) rotate(${geometry.rotate}deg) scale(${geometry.scale})`
+      const opacity = String(geometry.opacity)
+      const zIndex = String(geometry.z)
+      if (card.style.opacity !== opacity) card.style.opacity = opacity
+      if (card.style.zIndex !== zIndex) card.style.zIndex = zIndex
+    })
+
     const nextPhase = latest < FORMATION_START ? 'reveal' : latest < ORBIT_START ? 'form' : latest < ARCHIVE_START ? 'orbit' : 'archive'
-    if (nextPhase !== phase) setPhase(nextPhase)
+    if (nextPhase !== phaseRef.current) {
+      phaseRef.current = nextPhase
+      setPhase(nextPhase)
+    }
     const nextIndex = nextPhase === 'reveal' ? getRevealIndex(latest) : nextPhase === 'form' ? 0 : Math.round(getOrbitTurn(latest))
-    if (nextIndex !== activeIndex) setActiveIndex(nextIndex)
+    if (nextIndex !== activeIndexRef.current) {
+      activeIndexRef.current = nextIndex
+      setActiveIndex(nextIndex)
+    }
   })
 
   const goToProject = useCallback((index: number) => {
@@ -159,7 +210,7 @@ export function ProjectOrbitShowcase() {
       <div className="orbit-topline"><span><b>01</b>Project archive</span><span><em className="orbit-ticks" aria-hidden="true">{projects.map((project, index) => <i key={project.slug} className={index <= displayIndex ? 'is-lit' : ''} />)}</em><b>0{displayIndex + 1}</b> / 06 · Six selected projects</span></div>
       <motion.div className="orbit-progress" style={{ scaleX: progressScale }} />
       <div className="orbit-stage">
-        {projects.map((project, index) => <OrbitCard key={project.slug} project={project} index={index} progress={smoothProgress} active={(phase === 'reveal' || phase === 'orbit') && index === activeIndex} selected={phase === 'archive' && index === selectorIndex} />)}
+        {projects.map((project, index) => <OrbitCard ref={cardRefCallbacks[index]} key={project.slug} project={project} index={index} initialProgress={animationProgress.get()} compactViewport={compactViewport} active={(phase === 'reveal' || phase === 'orbit') && index === activeIndex} selected={phase === 'archive' && index === selectorIndex} />)}
       </div>
 
       <motion.div className="orbit-reveal-caption" style={{ opacity: revealOpacity, y: revealY }} aria-live="polite">
@@ -175,7 +226,7 @@ export function ProjectOrbitShowcase() {
 
       <motion.nav className="orbit-navigation" style={{ opacity: orbitUiOpacity, y: orbitUiY }} aria-label="Project orbit navigation">
         <button type="button" onClick={() => goToProject(Math.max(0, activeIndex - 1))} disabled={activeIndex === 0} aria-label="Previous project"><ChevronLeft size={17} /></button>
-        <div className="orbit-halo-map">{projects.map((project, index) => <HaloPoint key={project.slug} index={index} progress={smoothProgress} active={index === activeIndex} label={`Show project ${index + 1}: ${project.title}`} onSelect={() => goToProject(index)} />)}</div>
+        <div className="orbit-halo-map">{projects.map((project, index) => <HaloPoint key={project.slug} index={index} progress={animationProgress} active={index === activeIndex} label={`Show project ${index + 1}: ${project.title}`} onSelect={() => goToProject(index)} />)}</div>
         <button type="button" onClick={() => goToProject(Math.min(projects.length - 1, activeIndex + 1))} disabled={activeIndex === projects.length - 1} aria-label="Next project"><ChevronRight size={17} /></button>
       </motion.nav>
       <motion.div className="orbit-archive-selector" style={{ opacity: archiveOpacity, y: archiveY }}>

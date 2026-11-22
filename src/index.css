@@ -1,5 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
+
+@font-face {
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("/assets/fonts/manrope-latin-variable.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("/assets/fonts/plus-jakarta-sans-latin-variable.woff2") format("woff2");
+}
 
 :root {
   --color-paper: #f1efe9;
@@ -7632,8 +7647,12 @@ body:has(.reference-home) .availability { color:#fff; border-color:rgba(255,255,
 .reference-home .reference-marquee { background:#ffd16f; }
 
 /* The intro opens into the sky; no portal or symbolic object is introduced. */
-.reference-home .intro-loader { color:#fff; background:linear-gradient(180deg,#487fc2,#83b5e4 68%,#e9dce0); clip-path:inset(0); animation:intro-sky-exit .88s 1.72s cubic-bezier(.76,0,.24,1) forwards; }
-.reference-home .loader-word { color:#fffaf0; text-shadow:0 .1em 1em rgba(30,65,115,.24); transform-origin:center; animation:loader-word-sky .72s 1.04s cubic-bezier(.55,0,.2,1) forwards; }
+.reference-home .intro-loader { color:#fff; background:linear-gradient(180deg,#487fc2,#83b5e4 68%,#e9dce0); clip-path:inset(0); animation:none; }
+.reference-home .intro-loader.is-exiting { animation:intro-sky-exit .62s cubic-bezier(.76,0,.24,1) forwards; }
+.reference-home .loader-word { color:#fffaf0; text-shadow:0 .1em 1em rgba(30,65,115,.24); transform-origin:center; animation:none; }
+.reference-home .loader-center p { animation:none; }
+.reference-home .intro-loader.is-exiting .loader-word { animation:loader-word-sky .52s cubic-bezier(.55,0,.2,1) forwards; }
+.reference-home .intro-loader.is-exiting .loader-center p { animation:loader-meta-fold .36s ease forwards; }
 .reference-home .loader-word span:nth-child(5) { color:#fff0a8; background:transparent; }
 .reference-home .loader-center p,.reference-home .loader-top { color:rgba(255,255,255,.72); }
 .reference-home .loader-track { background:rgba(255,255,255,.28); }.reference-home .loader-track i { background:#fff0a8; }
@@ -7801,7 +7820,13 @@ body:has(.reference-home) { background:#071a38; }
   isolation: isolate;
 }
 
-.orbit-project-poster > img {
+.orbit-project-poster > picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.orbit-project-poster > picture > img {
   display: block;
   width: 100%;
   height: 100%;
@@ -8497,7 +8522,7 @@ a.contact-ledger-row:focus-visible {
 
 @media (max-width: 680px) {
   .reference-home .project-orbit-section {
-    height: 620svh;
+    height: 500svh;
   }
 
   .reference-home .reference-contact {
@@ -10224,6 +10249,10 @@ a.contact-ledger-row:focus-visible {
   border: 0;
   outline: 0;
   background: transparent;
+}
+
+.reference-home .orbit-project-poster {
+  background-color: rgba(224, 236, 248, .72);
 }
 
 .reference-home .orbit-final-deck > a {
