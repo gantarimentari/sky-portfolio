@@ -1,4 +1,4 @@
-import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
+import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Link } from 'react-router'
 import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform, type MotionValue } from 'motion/react'
@@ -239,7 +239,7 @@ export function ProjectOrbitShowcase() {
       <motion.div className="orbit-archive-selector" style={{ opacity: archiveOpacity, y: archiveY }}>
         <div className="orbit-archive-index">
           <p className="orbit-archive-label"><b>06</b>Project index</p><h2>Choose the work<br /><em>you want to open.</em></h2>
-          <div className="orbit-archive-rows" style={{ '--row': selectorIndex } as CSSProperties}><i className="orbit-archive-sun" aria-hidden="true" />{projects.map((project, index) => <button type="button" className={selectorIndex === index ? 'is-active' : ''} aria-pressed={selectorIndex === index} onMouseEnter={() => setSelectorIndex(index)} onFocus={() => setSelectorIndex(index)} onClick={() => setSelectorIndex(index)} key={project.slug}><span>0{index + 1}</span><strong>{project.title}</strong><small>{project.category}</small><ArrowRight size={15} /></button>)}</div>
+          <div className="orbit-archive-rows">{projects.map((project, index) => <button type="button" className={selectorIndex === index ? 'is-active' : ''} aria-pressed={selectorIndex === index} onMouseEnter={() => setSelectorIndex(index)} onFocus={() => setSelectorIndex(index)} onClick={() => setSelectorIndex(index)} key={project.slug}><span>0{index + 1}</span><strong>{project.title}</strong><small>{project.category}</small><i aria-hidden="true"><ArrowRight size={15} /></i></button>)}</div>
           <Link className="orbit-all-work" to="/work">Explore complete archive <ArrowRight size={16} /></Link>
         </div>
         <div className="orbit-archive-preview">
