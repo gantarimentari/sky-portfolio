@@ -3742,9 +3742,10 @@ h2 {
   border-radius: 0 0 1.25rem 1.25rem;
 }
 
+/* A long fade: the hero sky (clouds, haze, texture) dissolves into the page sky instead of ending on a line. */
 .reference-home .sky-hero-journey .hero-sky-field {
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 91%, rgba(0, 0, 0, .72) 96%, transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 0%, #000 91%, rgba(0, 0, 0, .72) 96%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 58%, rgba(0, 0, 0, .55) 80%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 58%, rgba(0, 0, 0, .55) 80%, transparent 100%);
 }
 
 .reference-home .section-lift-projects {

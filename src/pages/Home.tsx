@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router'
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react'
-import { profile } from '../data/profile'
 import { ProjectOrbitShowcase } from '../components/home/ProjectOrbitShowcase'
 import { IntroLoader } from '../components/home/IntroLoader'
 import { WeatheredHorizonsPrototype } from '../components/home/WeatheredHorizonsPrototype'
@@ -137,19 +136,6 @@ export function Home() {
             <i>·</i>
             <span>✦ Software Quality</span>
           </div>
-        </motion.div>
-
-        {/* Understated Minimalist Footer Cue */}
-        <motion.div className="reference-hero-footer" style={reduceMotion ? undefined : { opacity: heroCopyOpacity }}>
-          <a href="#work" className="curated-scroll-cue" aria-label="Scroll to discover work">
-            <span className="scroll-hairline">
-              <span className="hairline-drop" />
-            </span>
-            <span>SCROLL TO DISCOVER</span>
-          </a>
-          <span className="curated-footer-meta">
-            {profile.role.toUpperCase()} · {profile.location.toUpperCase()}
-          </span>
         </motion.div>
 
         <motion.div className="hero-project-handoff" style={reduceMotion ? undefined : { opacity: handoffOpacity, y: handoffY }} aria-hidden="true">
