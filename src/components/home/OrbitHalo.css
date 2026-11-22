@@ -299,64 +299,21 @@
  * Archive. The orbit ends where it began: the six cards gather in the middle of the sky and become
  * one large poster, centred like the hero and the halo. The front poster is exactly the orbit card
  * scaled by --poster-scale (frame included), and sits at the point the cards gather to in
- * cardGeometry, so the cards turn into it without a jump. Two arrangements of the other posters are
- * on trial: a fanned deck behind the front one, or a carousel drifting off into the sky.
- * Posters move by transform and opacity only.
+ * cardGeometry, so the cards turn into it without a jump. The other posters fan out behind it like
+ * a hand of cards, the deck the orbit opened from. It reads as the orbit's ending, not a new section,
+ * so there is no heading of its own. Posters move by transform and opacity only.
  */
 #selected-work .orbit-archive-selector {
   --archive-ink: #0b1e3a;
   --card-w: clamp(11rem, 17vw, 15rem);
   --poster-scale: 1.9;
-  --poster-y: -4vh;
+  --poster-y: -10vh;
   --poster-w: calc(var(--card-w) * var(--poster-scale));
   --poster-h: calc(var(--poster-w) * 9 / 16);
   display: block;
   inset: 0;
   overflow: visible;
   color: var(--archive-ink);
-}
-
-#selected-work .orbit-archive-label {
-  display: inline-flex;
-  align-items: center;
-  gap: .6rem;
-  color: var(--archive-ink);
-  font-size: .78rem;
-  font-weight: 600;
-  letter-spacing: 0;
-  text-transform: none;
-}
-
-#selected-work .orbit-archive-label b { font-weight: 800; font-variant-numeric: tabular-nums; }
-
-#selected-work .orbit-archive-label b::after {
-  content: '';
-  display: inline-block;
-  width: 1.4rem;
-  height: 1px;
-  margin: 0 0 .25em .6rem;
-  vertical-align: middle;
-  background: currentColor;
-  opacity: .5;
-}
-
-#selected-work .orbit-archive-head {
-  position: absolute;
-  top: clamp(7.4rem, 15.5vh, 10rem);
-  left: 50%;
-  translate: -50% 0;
-  width: min(60rem, 92vw);
-  text-align: center;
-}
-
-#selected-work .orbit-archive-head h2 {
-  margin: .55rem 0 0;
-  color: var(--archive-ink);
-  font-size: clamp(1.7rem, 3vw, 3rem);
-  letter-spacing: -.045em;
-  line-height: 1.02;
-  white-space: nowrap;
-  text-wrap: balance;
 }
 
 /* The stage is a point at the poster's centre; every poster is placed from it. */
@@ -402,16 +359,10 @@
 
 #selected-work .orbit-archive-poster > :focus-visible { outline: 2px solid var(--archive-ink); outline-offset: 4px; }
 
-/* Deck: the others fan out behind the front poster like a hand of cards. */
-#selected-work .archive-deck .orbit-archive-poster {
+/* The others fan out behind the front poster like a hand of cards. */
+#selected-work .orbit-archive-poster {
   transform: translate(-50%, -50%) translate(calc(var(--o) * 2.4rem), calc(var(--a) * -.25rem)) rotate(calc(var(--o) * 2.6deg)) scale(calc(1 - var(--a) * .06));
   opacity: calc(1 - var(--a) * .14);
-}
-
-/* Carousel: the others sit beside it, smaller and fading as they drift off into the sky. */
-#selected-work .archive-carousel .orbit-archive-poster {
-  transform: translate(-50%, -50%) translateX(calc(var(--o) * min(34vw, 30rem))) scale(calc(1 - min(var(--a), 2) * .28));
-  opacity: max(0, calc(1 - var(--a) * .42));
 }
 
 /* Copy under the poster, centred. */
@@ -501,15 +452,13 @@
 #selected-work .orbit-archive-actions a:hover,
 #selected-work .orbit-archive-actions a:focus-visible { border-bottom-color: var(--archive-ink); }
 
-/* Phones: the card is 27vw there, so a bigger scale; the heading may wrap. */
+/* Phones: the card is 27vw there, so a bigger scale. */
 @media (max-width: 680px) {
-  #selected-work .orbit-archive-selector { --card-w: 27vw; --poster-scale: 2.8; --poster-y: -13vh; inset: 0; display: block; overflow: visible; }
-  #selected-work .orbit-archive-head { top: 7.4rem; }
-  #selected-work .orbit-archive-head h2 { font-size: 1.6rem; white-space: normal; }
+  #selected-work .orbit-archive-selector { --card-w: 27vw; --poster-scale: 2.8; --poster-y: -16vh; inset: 0; display: block; overflow: visible; }
   #selected-work .orbit-archive-count em { display: none; }
   #selected-work .orbit-archive-actions { gap: 1.1rem; }
   #selected-work .orbit-archive-actions a { font-size: .66rem; white-space: nowrap; }
-  #selected-work .archive-deck .orbit-archive-poster {
+  #selected-work .orbit-archive-poster {
     transform: translate(-50%, -50%) translate(calc(var(--o) * 1.1rem), calc(var(--a) * -.3rem)) rotate(calc(var(--o) * 2.2deg)) scale(calc(1 - var(--a) * .05));
   }
   #selected-work .orbit-archive-meta > p { font-size: .84rem; }

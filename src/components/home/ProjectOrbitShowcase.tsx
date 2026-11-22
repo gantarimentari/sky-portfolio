@@ -66,7 +66,7 @@ function cardGeometry(index: number, progress: number, compactViewport: boolean)
     const previewHandoff = ease((progress - (ARCHIVE_START + .035)) / .055)
     // Gather onto the centred archive poster (OrbitHalo.css: --poster-y and --poster-scale).
     const archiveX = (index - 2.5) * .14
-    const archiveY = (compactViewport ? -13 : -4) + (index - 2.5) * .48
+    const archiveY = (compactViewport ? -16 : -10) + (index - 2.5) * .48
     x = mix(orbitX, archiveX, archiveGather)
     y = mix(orbitY, archiveY, archiveGather)
     scale = mix(1, compactViewport ? 2.8 : 1.9, archiveGather)
@@ -137,8 +137,6 @@ export function ProjectOrbitShowcase() {
   const reduceMotion = useReducedMotion()
   const [activeIndex, setActiveIndex] = useState(0)
   const [selectorIndex, setSelectorIndex] = useState(0)
-  // shortcut: ?archive=carousel switches the archive arrangement for side-by-side review; drop once one is chosen.
-  const [archiveVariant] = useState(() => new URLSearchParams(window.location.search).get('archive') === 'carousel' ? 'carousel' : 'deck')
   const [phase, setPhase] = useState<'reveal' | 'form' | 'orbit' | 'archive'>('reveal')
   const activeIndexRef = useRef(activeIndex)
   const phaseRef = useRef(phase)
@@ -239,8 +237,7 @@ export function ProjectOrbitShowcase() {
         <div className="orbit-halo-map">{projects.map((project, index) => <HaloPoint key={project.slug} index={index} progress={animationProgress} active={index === activeIndex} label={`Show project ${index + 1}: ${project.title}`} onSelect={() => goToProject(index)} />)}</div>
         <button type="button" onClick={() => goToProject(Math.min(projects.length - 1, activeIndex + 1))} disabled={activeIndex === projects.length - 1} aria-label="Next project"><ChevronRight size={17} /></button>
       </motion.nav>
-      <motion.div className={`orbit-archive-selector archive-${archiveVariant}`} style={{ opacity: archiveOpacity, y: archiveY }}>
-        <div className="orbit-archive-head"><p className="orbit-archive-label"><b>06</b>Project index</p><h2>Choose the work you want to open.</h2></div>
+      <motion.div className="orbit-archive-selector" style={{ opacity: archiveOpacity, y: archiveY }}>
         <div className="orbit-archive-stage">
           {projects.map((project, index) => <div key={project.slug} className={`orbit-archive-poster${index === selectorIndex ? ' is-active' : ''}`} style={{ '--o': index - selectorIndex } as CSSProperties}>
             {index === selectorIndex
