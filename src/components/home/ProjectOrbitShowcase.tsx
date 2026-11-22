@@ -1,4 +1,4 @@
-import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Link } from 'react-router'
 import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform, type MotionValue } from 'motion/react'
@@ -207,6 +207,7 @@ export function ProjectOrbitShowcase() {
   const activeProject = projects[activeIndex]
   const activeStack = activeProject.technologies.filter(item => item !== 'Details in progress')
   const selectedProject = projects[selectorIndex]
+  const selectedStack = selectedProject.technologies.filter(item => item !== 'Details in progress').slice(0, 3)
   const displayIndex = phase === 'archive' ? selectorIndex : activeIndex
 
   return <section className={`project-orbit-section orbit-phase-${phase}`} id="selected-work" ref={sectionRef} aria-label="Animated project archive">
@@ -237,8 +238,8 @@ export function ProjectOrbitShowcase() {
       </motion.nav>
       <motion.div className="orbit-archive-selector" style={{ opacity: archiveOpacity, y: archiveY }}>
         <div className="orbit-archive-index">
-          <p>PROJECT INDEX / 06 STORIES</p><h2>Choose the work<br /><em>you want to open.</em></h2>
-          <div className="orbit-archive-rows">{projects.map((project, index) => <button type="button" className={selectorIndex === index ? 'is-active' : ''} aria-pressed={selectorIndex === index} onMouseEnter={() => setSelectorIndex(index)} onFocus={() => setSelectorIndex(index)} onClick={() => setSelectorIndex(index)} key={project.slug}><span>0{index + 1}</span><strong>{project.title}</strong><small>{project.category}</small><ArrowRight size={15} /></button>)}</div>
+          <p className="orbit-archive-label"><b>06</b>Project index</p><h2>Choose the work<br /><em>you want to open.</em></h2>
+          <div className="orbit-archive-rows" style={{ '--row': selectorIndex } as CSSProperties}><i className="orbit-archive-sun" aria-hidden="true" />{projects.map((project, index) => <button type="button" className={selectorIndex === index ? 'is-active' : ''} aria-pressed={selectorIndex === index} onMouseEnter={() => setSelectorIndex(index)} onFocus={() => setSelectorIndex(index)} onClick={() => setSelectorIndex(index)} key={project.slug}><span>0{index + 1}</span><strong>{project.title}</strong><small>{project.category}</small><ArrowRight size={15} /></button>)}</div>
           <Link className="orbit-all-work" to="/work">Explore complete archive <ArrowRight size={16} /></Link>
         </div>
         <div className="orbit-archive-preview">
@@ -247,10 +248,10 @@ export function ProjectOrbitShowcase() {
               <ProjectPoster project={selectedProject} />
             </Link>
           </div>
-          <div className="orbit-archive-meta"><p>PROJECT 0{selectorIndex + 1} / {selectedProject.role}</p><h3>{selectedProject.title}</h3><p>{selectedProject.summary}</p><ul>{selectedProject.technologies.slice(0, 3).map(item => <li key={item}>{item}</li>)}</ul><Link to={`/work/${selectedProject.slug}`}>View case study <ArrowRight size={16} /></Link></div>
+          <div className="orbit-archive-meta"><p className="orbit-archive-label"><b>0{selectorIndex + 1}</b>{selectedProject.role}</p><h3>{selectedProject.title}</h3><p>{selectedProject.summary}</p>{selectedStack.length > 0 && <ul aria-label="Technologies">{selectedStack.map(item => <li key={item}>{item}</li>)}</ul>}<Link to={`/work/${selectedProject.slug}`}>View case study <ArrowRight size={16} /></Link></div>
         </div>
       </motion.div>
-      <p className="orbit-scroll-note">{phase === 'reveal' ? 'SCROLL TO OPEN EACH PROJECT' : phase === 'form' ? 'THE DECK BECOMES AN ORBIT' : phase === 'archive' ? 'SELECT A PROJECT OR CONTINUE ↓' : 'SCROLL OR USE NAVIGATION'} <span aria-hidden="true">↓</span></p>
+      <p className="orbit-scroll-note">{phase === 'reveal' ? 'SCROLL TO OPEN EACH PROJECT' : phase === 'form' ? 'THE DECK BECOMES AN ORBIT' : phase === 'archive' ? 'SELECT A PROJECT OR CONTINUE' : 'SCROLL OR USE NAVIGATION'} <span aria-hidden="true">↓</span></p>
     </div>
   </section>
 }
