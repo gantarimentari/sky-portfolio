@@ -1,0 +1,66 @@
+/*
+ * Ink follows the sky. A clear sky is deepest blue near the zenith and pales toward the horizon,
+ * where light crosses about ten times more air. The white title stays up in the deep blue; the lines
+ * lower down, on the pale horizon band, switch to navy ink. No boxes, pills or glass.
+ * The #top prefix outranks the layered rules in index.css.
+ */
+#top.sky-hero-journey { --hero-ink: #15345d; }
+
+/* The heading rows clipped their own descenders (the g in Crafting and digital) and cut the
+   soft shadow into a visible rectangle. They no longer clip; the words still rise and fade in. */
+#top .title-row { overflow: visible; }
+
+/* The intro already sits on the pale band, so it takes the navy ink too. */
+#top .reference-intro {
+  color: var(--hero-ink);
+  text-shadow: 0 0 16px rgba(255, 252, 244, .75);
+}
+
+/* Lower lines sit on the pale horizon band: navy ink instead of white. */
+#top .curated-secondary-link {
+  color: var(--hero-ink);
+  border-bottom-color: color-mix(in srgb, var(--hero-ink) 40%, transparent);
+  text-shadow: 0 0 14px rgba(255, 252, 244, .7);
+}
+
+#top .curated-secondary-link:hover,
+#top .curated-secondary-link:focus-visible { border-bottom-color: var(--hero-ink); }
+
+/* Disciplines on a horizon line, divided by instrument ticks (the same marks as the orbit's top line). */
+#top .hero-disciplines-row {
+  position: relative;
+  align-items: center;
+  gap: 0;
+  padding-bottom: .75rem;
+  color: var(--hero-ink);
+  font-size: .8rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  text-shadow: 0 0 12px rgba(255, 252, 244, .8);
+}
+
+#top .hero-disciplines-row span { padding: 0 1.1rem; opacity: .9; }
+
+#top .hero-disciplines-row i {
+  width: 1px;
+  height: .75rem;
+  background: currentColor;
+  opacity: .4;
+}
+
+#top .hero-disciplines-row::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, currentColor 18%, currentColor 82%, transparent);
+  opacity: .32;
+}
+
+@media (max-width: 480px) {
+  #top .hero-disciplines-row { flex-wrap: nowrap; justify-content: center; font-size: .7rem; white-space: nowrap; }
+  #top .hero-disciplines-row span { padding: 0 .42rem; }
+}

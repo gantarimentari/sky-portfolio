@@ -1,10 +1,11 @@
-import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Link } from 'react-router'
-import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react'
+import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform, type MotionValue } from 'motion/react'
 import { projects, type Project } from '../../data/projects'
 import { prepareInitialViewport } from '../../lib/initialViewportReady'
 import { prepareProjectPosters } from '../../lib/projectPosterReady'
+import './OrbitHalo.css'
 
 const REVEAL_START = .025
 const REVEAL_END = .455
@@ -16,9 +17,19 @@ const REVEAL_SLICE = (REVEAL_END - REVEAL_START) / projects.length
 
 const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value))
 const mix = (from: number, to: number, progress: number) => from + (to - from) * progress
-const ease = (value: number) => 1 - Math.pow(1 - clamp(value), 3)
+// Ease in and out: each segment starts from rest, so a card never snaps from still to full speed.
+const ease = (value: number) => { const t = clamp(value); return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2 }
 const getOrbitTurn = (progress: number) => clamp((progress - ORBIT_START) / (ORBIT_END - ORBIT_START)) * (projects.length - 1)
 const getRevealIndex = (progress: number) => Math.min(projects.length - 1, Math.max(0, Math.floor((progress - REVEAL_START) / REVEAL_SLICE)))
+
+// The archive poster is the orbit card scaled up. Its height follows the screen (about a third of it,
+// capped at 46% of the width), so it stays in proportion from a laptop to a 27-inch display.
+// The card is clamp(11rem, 17vw, 15rem) wide on desktop and 27vw on phones (index.css).
+function archiveScale(compactViewport: boolean) {
+  if (compactViewport) return 2.8
+  const card = Math.min(240, Math.max(176, innerWidth * .17))
+  return Math.max(1.6, Math.min(innerHeight * .32 * 16 / 9, innerWidth * .46) / card)
+}
 
 function cardGeometry(index: number, progress: number, compactViewport: boolean) {
   const side = index % 2 === 0 ? 1 : -1
@@ -33,12 +44,14 @@ function cardGeometry(index: number, progress: number, compactViewport: boolean)
 
   if (progress < FORMATION_START) {
     if (local <= 0) return { x: deckX, y: deckY, scale: deckScale, rotate: (index - 2.5) * .35, opacity: 1, z: 20 - index, depth: 1 }
-    if (local < .68) {
-      const lift = ease(local / .34)
+    if (local < .5) {
+      const lift = ease(local / .3)
       return { x: mix(deckX, side * 1.5, lift), y: mix(deckY, -2.5, lift), scale: mix(deckScale, 1.075, lift), rotate: mix(0, side * 1.8, lift), opacity: 1, z: 50, depth: 1 }
     }
-    const park = ease((local - .68) / .32)
-    return { x: mix(side * 1.5, openedX, park), y: mix(-2.5, openedY, park), scale: mix(1.075, .72, park), rotate: mix(side * 1.8, openedRotate, park), opacity: 1, z: local < 1 ? 50 : 12 - index, depth: 1 }
+    // Half the slice to glide aside. Parked cards keep one stacking order (above the deck, earlier cards on top),
+    // so nothing pops in front or behind while a card is moving or when it lands.
+    const park = ease((local - .5) / .5)
+    return { x: mix(side * 1.5, openedX, park), y: mix(-2.5, openedY, park), scale: mix(1.075, .72, park), rotate: mix(side * 1.8, openedRotate, park), opacity: 1, z: 40 - index, depth: 1 }
   }
 
   const formation = clamp((progress - FORMATION_START) / (ORBIT_START - FORMATION_START))
@@ -60,11 +73,12 @@ function cardGeometry(index: number, progress: number, compactViewport: boolean)
   if (progress > ARCHIVE_START) {
     const archiveGather = ease((progress - ARCHIVE_START) / .105)
     const previewHandoff = ease((progress - (ARCHIVE_START + .035)) / .055)
-    const archiveX = (compactViewport ? -27 : 11) + (index - 2.5) * .14
-    const archiveY = (compactViewport ? -32 : 4) + index * .48
+    // Gather onto the centred archive poster (OrbitHalo.css: --poster-y and --poster-scale).
+    const archiveX = (index - 2.5) * .14
+    const archiveY = (compactViewport ? -16 : -10) + (index - 2.5) * .48
     x = mix(orbitX, archiveX, archiveGather)
     y = mix(orbitY, archiveY, archiveGather)
-    scale = mix(1, compactViewport ? 1.4 : 1.35, archiveGather)
+    scale = mix(1, archiveScale(compactViewport), archiveGather)
     opacity = 1 - previewHandoff
     rotate = mix(0, (index - 2.5) * .7, archiveGather)
     z = 20 - index
@@ -91,6 +105,18 @@ const OrbitCard = memo(forwardRef<HTMLElement, OrbitCardProps>(function OrbitCar
     </Link>
   </article>
 }), (previous, next) => previous.project === next.project && previous.active === next.active && previous.selected === next.selected)
+
+// New project copy rises in softly instead of swapping in place.
+const focusEnter = (delay: number) => ({ initial: { opacity: 0, y: 8 }, animate: { opacity: 1, y: 0 }, transition: { duration: .45, delay, ease: [.16, 1, .3, 1] as const } })
+
+// The navigation is a miniature of the orbit: each point turns with its card, the front one is the open project.
+function HaloPoint({ index, progress, active, label, onSelect }: { index: number; progress: MotionValue<number>; active: boolean; label: string; onSelect: () => void }) {
+  const angle = useTransform(progress, current => (90 + (index - (current < ORBIT_START ? 0 : getOrbitTurn(current))) * 60) * Math.PI / 180)
+  const x = useTransform(angle, current => Math.cos(current) * 46)
+  const y = useTransform(angle, current => Math.sin(current) * 15)
+  const scale = useTransform(angle, current => .72 + .28 * (Math.sin(current) + 1) / 2)
+  return <motion.button type="button" className={active ? 'is-active' : ''} style={{ x, y, scale }} onClick={onSelect} aria-label={label} aria-current={active ? 'true' : undefined}><span /></motion.button>
+}
 
 function ProjectPoster({ project, priority = false }: { project: Project; priority?: boolean }) {
   return <div className={`orbit-project-poster visual-${project.accent}`}>
@@ -143,12 +169,16 @@ export function ProjectOrbitShowcase() {
     return () => { active = false }
   }, [])
 
+  useEffect(() => {
+    const syncArchiveScale = () => sectionRef.current?.style.setProperty('--archive-scale', String(archiveScale(window.matchMedia('(max-width: 680px)').matches)))
+    syncArchiveScale()
+    addEventListener('resize', syncArchiveScale)
+    return () => removeEventListener('resize', syncArchiveScale)
+  }, [])
+
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end end'] })
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 175, damping: 30, mass: .28, restDelta: .00025 })
-  // Touch scrolling already carries platform momentum. Following raw progress on
-  // compact viewports avoids a second, delayed spring tail when a swipe stops
-  // or reverses. Desktop keeps the approved smoothing behavior.
-  const animationProgress = compactViewport ? scrollYProgress : smoothProgress
+  // Lenis already eases the scroll on every device; a spring on top made the cards trail and wobble.
+  const animationProgress = scrollYProgress
   const progressScale = useTransform(animationProgress, [0, 1], [0, 1])
   const revealOpacity = useTransform(animationProgress, [0, .02, REVEAL_END - .02, FORMATION_START], [0, 1, 1, 0])
   const revealY = useTransform(animationProgress, [0, .04], [18, 0])
@@ -192,12 +222,14 @@ export function ProjectOrbitShowcase() {
 
   if (reduceMotion) return <StaticArchive />
   const activeProject = projects[activeIndex]
+  const activeStack = activeProject.technologies.filter(item => item !== 'Details in progress')
   const selectedProject = projects[selectorIndex]
+  const selectedStack = selectedProject.technologies.filter(item => item !== 'Details in progress').slice(0, 3)
   const displayIndex = phase === 'archive' ? selectorIndex : activeIndex
 
   return <section className={`project-orbit-section orbit-phase-${phase}`} id="selected-work" ref={sectionRef} aria-label="Animated project archive">
     <div className="project-orbit-sticky">
-      <div className="orbit-topline"><span>01 / PROJECT ARCHIVE</span><span>0{displayIndex + 1} / 06 · SIX SELECTED PROJECTS</span></div>
+      <div className="orbit-topline"><span><b>01</b>Project archive</span><span><em className="orbit-ticks" aria-hidden="true">{projects.map((project, index) => <i key={project.slug} className={index <= displayIndex ? 'is-lit' : ''} />)}</em><b>0{displayIndex + 1}</b> / 06 · Six selected projects</span></div>
       <motion.div className="orbit-progress" style={{ scaleX: progressScale }} />
       <div className="orbit-stage">
         {projects.map((project, index) => <OrbitCard ref={cardRefCallbacks[index]} key={project.slug} project={project} index={index} initialProgress={animationProgress.get()} compactViewport={compactViewport} active={(phase === 'reveal' || phase === 'orbit') && index === activeIndex} selected={phase === 'archive' && index === selectorIndex} />)}
@@ -209,32 +241,38 @@ export function ProjectOrbitShowcase() {
       <motion.div className="orbit-forming-label" style={{ opacity: formationOpacity }}><span>ALL PROJECTS OPENED</span><strong>FORMING THE ORBIT</strong></motion.div>
 
       <motion.aside className="orbit-focus-copy" style={{ opacity: orbitUiOpacity, y: orbitUiY }} aria-live="polite">
-        <p className="eyebrow">PROJECT 0{activeIndex + 1} / {activeProject.category}</p>
-        <h3>{activeProject.title}</h3><p>{activeProject.summary}</p>
+        <motion.p key={`eyebrow-${activeIndex}`} className="eyebrow" {...focusEnter(0)}><b>0{activeIndex + 1}</b>{activeProject.category}</motion.p>
+        <motion.h3 key={`title-${activeIndex}`} {...focusEnter(.04)}>{activeProject.title}</motion.h3>
+        <motion.p key={`summary-${activeIndex}`} {...focusEnter(.08)}>{activeProject.summary}</motion.p>
+        {activeStack.length > 0 && <motion.ul key={`stack-${activeIndex}`} className="orbit-focus-stack" aria-label="Technologies" {...focusEnter(.12)}>{activeStack.map(item => <li key={item}>{item}</li>)}</motion.ul>}
         <div className="orbit-focus-actions"><Link to={`/work/${activeProject.slug}`}>View project <ArrowRight size={15} /></Link><Link to="/work">All six projects</Link></div>
       </motion.aside>
 
       <motion.nav className="orbit-navigation" style={{ opacity: orbitUiOpacity, y: orbitUiY }} aria-label="Project orbit navigation">
         <button type="button" onClick={() => goToProject(Math.max(0, activeIndex - 1))} disabled={activeIndex === 0} aria-label="Previous project"><ChevronLeft size={17} /></button>
-        <div className="orbit-dots">{projects.map((project, index) => <button key={project.slug} type="button" className={index === activeIndex ? 'is-active' : ''} onClick={() => goToProject(index)} aria-label={`Show project ${index + 1}: ${project.title}`} aria-current={index === activeIndex ? 'true' : undefined}><span /></button>)}</div>
+        <div className="orbit-halo-map">{projects.map((project, index) => <HaloPoint key={project.slug} index={index} progress={animationProgress} active={index === activeIndex} label={`Show project ${index + 1}: ${project.title}`} onSelect={() => goToProject(index)} />)}</div>
         <button type="button" onClick={() => goToProject(Math.min(projects.length - 1, activeIndex + 1))} disabled={activeIndex === projects.length - 1} aria-label="Next project"><ChevronRight size={17} /></button>
       </motion.nav>
       <motion.div className="orbit-archive-selector" style={{ opacity: archiveOpacity, y: archiveY }}>
-        <div className="orbit-archive-index">
-          <p>PROJECT INDEX / 06 STORIES</p><h2>Choose the work<br /><em>you want to open.</em></h2>
-          <div className="orbit-archive-rows">{projects.map((project, index) => <button type="button" className={selectorIndex === index ? 'is-active' : ''} aria-pressed={selectorIndex === index} onMouseEnter={() => setSelectorIndex(index)} onFocus={() => setSelectorIndex(index)} onClick={() => setSelectorIndex(index)} key={project.slug}><span>0{index + 1}</span><strong>{project.title}</strong><small>{project.category}</small><ArrowRight size={15} /></button>)}</div>
-          <Link className="orbit-all-work" to="/work">Explore complete archive <ArrowRight size={16} /></Link>
+        <div className="orbit-archive-stage">
+          {projects.map((project, index) => <div key={project.slug} className={`orbit-archive-poster${index === selectorIndex ? ' is-active' : ''}`} style={{ '--o': index - selectorIndex } as CSSProperties}>
+            {index === selectorIndex
+              ? <Link to={`/work/${project.slug}`} aria-label={`Open ${project.title} case study`}><ProjectPoster project={project} /></Link>
+              : <button type="button" onClick={() => setSelectorIndex(index)} aria-label={`Show project ${index + 1}: ${project.title}`} tabIndex={Math.abs(index - selectorIndex) > 1 ? -1 : 0}><ProjectPoster project={project} /></button>}
+          </div>)}
         </div>
-        <div className="orbit-archive-preview">
-          <div className="orbit-final-deck">
-            <Link to={`/work/${selectedProject.slug}`} aria-label={`Open ${selectedProject.title} case study`}>
-              <ProjectPoster project={selectedProject} />
-            </Link>
+        <div className="orbit-archive-meta">
+          <div className="orbit-archive-count">
+            <button type="button" onClick={() => setSelectorIndex(Math.max(0, selectorIndex - 1))} disabled={selectorIndex === 0} aria-label="Previous project"><ChevronLeft size={16} /></button>
+            <span aria-live="polite"><b>0{selectorIndex + 1}</b> / 06<em> · {selectedProject.category}</em></span>
+            <button type="button" onClick={() => setSelectorIndex(Math.min(projects.length - 1, selectorIndex + 1))} disabled={selectorIndex === projects.length - 1} aria-label="Next project"><ChevronRight size={16} /></button>
           </div>
-          <div className="orbit-archive-meta"><p>PROJECT 0{selectorIndex + 1} / {selectedProject.role}</p><h3>{selectedProject.title}</h3><p>{selectedProject.summary}</p><ul>{selectedProject.technologies.slice(0, 3).map(item => <li key={item}>{item}</li>)}</ul><Link to={`/work/${selectedProject.slug}`}>View case study <ArrowRight size={16} /></Link></div>
+          <h3>{selectedProject.title}</h3><p>{selectedProject.summary}</p>
+          {selectedStack.length > 0 && <ul aria-label="Technologies">{selectedStack.map(item => <li key={item}>{item}</li>)}</ul>}
+          <div className="orbit-archive-actions"><Link to={`/work/${selectedProject.slug}`}>View case study <ArrowRight size={15} /></Link><Link to="/work">Explore complete archive <ArrowRight size={15} /></Link></div>
         </div>
       </motion.div>
-      <p className="orbit-scroll-note">{phase === 'reveal' ? 'SCROLL TO OPEN EACH PROJECT' : phase === 'form' ? 'THE DECK BECOMES AN ORBIT' : phase === 'archive' ? 'SELECT A PROJECT OR CONTINUE ↓' : 'SCROLL OR USE NAVIGATION'} <span aria-hidden="true">↓</span></p>
+      <p className="orbit-scroll-note">{phase === 'reveal' ? 'SCROLL TO OPEN EACH PROJECT' : phase === 'form' ? 'THE DECK BECOMES AN ORBIT' : phase === 'archive' ? 'SELECT A PROJECT OR CONTINUE' : 'SCROLL OR USE NAVIGATION'} <span aria-hidden="true">↓</span></p>
     </div>
   </section>
 }

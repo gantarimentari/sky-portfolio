@@ -1,0 +1,465 @@
+/*
+ * Halo 22°: the orbit is drawn as the ice-crystal halo that rings the sun in a thin cirrus sky.
+ * Real optics, kept faint: a sharp reddish inner edge fading out to white and blue, a slightly darker sky
+ * inside the ring (no light refracts at under 22°), and two sundogs level with the sun.
+ * The project copy sits where the sun would be, and the navigation is a miniature of the same halo.
+ * Every glow is a static gradient: only opacity and transform ever change.
+ * The #selected-work prefix outranks the layered overrides in index.css without touching them.
+ */
+#selected-work.project-orbit-section {
+  /* One sun for every project: a white aureole fading into sky blue, as forward-scattered light does around the midday sun. */
+  --sun-tint: #2a76b8;
+  --tint-ink: #003e7b;
+  --halo-ink: var(--project-ink, #15345d);
+  --halo-rx: 31vw;
+  --halo-ry: 29vh;
+}
+
+@media (max-width: 680px) {
+  #selected-work.project-orbit-section { --halo-rx: 36vw; --halo-ry: 22vh; }
+}
+
+/* The ring sits at 1/1.3 = 76.9% of this box, exactly on the path the cards travel. */
+#selected-work .orbit-stage::after,
+#selected-work .orbit-stage::before {
+  content: '';
+  position: absolute;
+  inset: auto;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--halo-rx) * 2.6);
+  height: calc(var(--halo-ry) * 2.6);
+  margin: calc(var(--halo-ry) * -1.3) 0 0 calc(var(--halo-rx) * -1.3);
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  pointer-events: none;
+}
+
+#selected-work .orbit-stage::after {
+  background: radial-gradient(closest-side,
+    transparent 0 30%,
+    rgba(28, 58, 108, .025) 55%,
+    rgba(28, 58, 108, .045) 74.6%,
+    rgba(255, 150, 112, .12) 76.1%,
+    rgba(255, 228, 194, .26) 77.1%,
+    rgba(255, 255, 255, .16) 79%,
+    rgba(232, 242, 255, .06) 84%,
+    transparent 94%);
+}
+
+/* Sundogs: level with the sun, just outside the ring, red on the side facing it. */
+#selected-work .orbit-stage::before {
+  opacity: 0;
+  transform: scale(.72);
+  transition: opacity .7s ease, transform .9s cubic-bezier(.16, 1, .3, 1);
+  background:
+    radial-gradient(ellipse 1.1% 2.6% at 10.8% 50%, rgba(255, 252, 240, .8), rgba(255, 240, 214, .35) 45%, transparent),
+    radial-gradient(ellipse 1.6% 3.2% at 11.3% 50%, rgba(255, 130, 92, .32), transparent 70%),
+    radial-gradient(ellipse 5% 1.2% at 7.5% 50%, rgba(214, 232, 255, .3), transparent),
+    radial-gradient(ellipse 1.1% 2.6% at 89.2% 50%, rgba(255, 252, 240, .8), rgba(255, 240, 214, .35) 45%, transparent),
+    radial-gradient(ellipse 1.6% 3.2% at 88.7% 50%, rgba(255, 130, 92, .32), transparent 70%),
+    radial-gradient(ellipse 5% 1.2% at 92.5% 50%, rgba(214, 232, 255, .3), transparent);
+}
+
+#selected-work.orbit-phase-orbit .orbit-stage::before { opacity: .55; transform: scale(1); }
+
+/* The sun at the centre of the halo carries the open project. */
+#selected-work .orbit-focus-copy {
+  isolation: isolate;
+  overflow: visible;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  color: var(--halo-ink);
+}
+
+#selected-work .orbit-focus-copy::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -62% -36%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side,
+    color-mix(in srgb, var(--sun-tint) 6%, rgba(255, 253, 246, .6)) 0 16%,
+    color-mix(in srgb, var(--sun-tint) 14%, rgba(255, 249, 232, .42)) 40%,
+    color-mix(in srgb, var(--sun-tint) 22%, rgba(255, 244, 220, .2)) 66%,
+    color-mix(in srgb, var(--sun-tint) 10%, rgba(255, 240, 212, .06)) 84%,
+    rgba(255, 238, 206, 0));
+  pointer-events: none;
+}
+
+/* Label: the project number in its own colour, a hairline, then the category in plain case. */
+#selected-work .orbit-focus-copy .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  color: color-mix(in srgb, var(--halo-ink) 80%, transparent);
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+#selected-work .orbit-focus-copy .eyebrow b {
+  color: var(--tint-ink);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+#selected-work .orbit-focus-copy .eyebrow b::after {
+  content: '';
+  display: inline-block;
+  width: 1.4rem;
+  height: 1px;
+  margin: 0 0 .25em .6rem;
+  vertical-align: middle;
+  background: currentColor;
+  opacity: .6;
+}
+
+/* Stack as a quiet readout, divided by the same ticks as the hero and the top line. */
+#selected-work .orbit-focus-stack {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: .2rem 0 1rem;
+  padding: 0;
+  list-style: none;
+  color: var(--tint-ink);
+  font-size: .74rem;
+  font-weight: 600;
+}
+
+#selected-work .orbit-focus-stack li { padding: 0 .6rem; }
+#selected-work .orbit-focus-stack li + li { border-left: 1px solid color-mix(in srgb, currentColor 35%, transparent); }
+#selected-work .orbit-focus-copy h3 { color: var(--halo-ink); }
+#selected-work .orbit-focus-copy > p:not(.eyebrow) { color: color-mix(in srgb, var(--halo-ink) 78%, transparent); }
+
+#selected-work .orbit-focus-actions a {
+  color: var(--halo-ink);
+  border-bottom-color: color-mix(in srgb, var(--halo-ink) 35%, transparent);
+  transition: border-color .2s ease;
+}
+
+#selected-work .orbit-focus-actions a:hover,
+#selected-work .orbit-focus-actions a:focus-visible { border-bottom-color: var(--tint-ink); }
+
+/* Navigation: prev / a small halo whose points turn with the cards / next. */
+#selected-work .orbit-navigation {
+  align-items: center;
+  gap: .9rem;
+  padding: 0;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  color: var(--halo-ink);
+}
+
+#selected-work .orbit-navigation > button {
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 1px solid color-mix(in srgb, var(--halo-ink) 32%, transparent);
+  border-radius: 50%;
+  background: rgba(255, 252, 242, .28);
+  color: var(--halo-ink);
+  transition: background-color .2s ease, border-color .2s ease;
+}
+
+#selected-work .orbit-navigation > button:hover:not(:disabled),
+#selected-work .orbit-navigation > button:focus-visible:not(:disabled) {
+  border-color: var(--halo-ink);
+  background: rgba(255, 252, 242, .72);
+}
+
+#selected-work .orbit-navigation > button:disabled { opacity: .3; }
+
+#selected-work .orbit-halo-map {
+  position: relative;
+  width: 7.4rem;
+  height: 3.2rem;
+}
+
+/* The mini ring with the same red-to-white edge, and the sun in its centre. */
+#selected-work .orbit-halo-map::before,
+#selected-work .orbit-halo-map::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+#selected-work .orbit-halo-map::before {
+  width: 92px;
+  height: 30px;
+  margin: -15px 0 0 -46px;
+  box-shadow: inset 0 0 0 1px rgba(255, 252, 244, .75), 0 0 0 1px rgba(196, 92, 56, .22);
+}
+
+#selected-work .orbit-halo-map::after {
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  background: radial-gradient(circle, #fffdf3 0 35%, rgba(255, 236, 190, .6) 60%, transparent 72%);
+}
+
+#selected-work .orbit-halo-map button {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+}
+
+#selected-work .orbit-halo-map span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--halo-ink) 55%, transparent);
+  transition: background-color .25s ease, box-shadow .25s ease;
+}
+
+#selected-work .orbit-halo-map button.is-active span {
+  background: var(--halo-ink);
+  box-shadow: 0 0 0 3px rgba(255, 252, 242, .9);
+}
+
+#selected-work .orbit-halo-map button:focus-visible {
+  outline: 2px solid var(--halo-ink);
+  outline-offset: 1px;
+}
+
+/* Top line: sentence case with a sextant-like scale that fills as projects open. */
+#selected-work .orbit-topline,
+#selected-work .orbit-topline span {
+  color: var(--halo-ink);
+  text-transform: none;
+  font-size: .8rem;
+  font-weight: 600;
+  letter-spacing: -.005em;
+}
+
+#selected-work .orbit-topline span {
+  display: inline-flex;
+  align-items: center;
+  white-space: pre;
+}
+
+#selected-work .orbit-topline b {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+#selected-work .orbit-topline span:first-child b::after {
+  content: '';
+  display: inline-block;
+  width: 1.6rem;
+  height: 1px;
+  margin: 0 .55rem .25em;
+  vertical-align: middle;
+  background: currentColor;
+  opacity: .45;
+}
+
+#selected-work .orbit-ticks {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 12px;
+  margin-right: .7rem;
+}
+
+#selected-work .orbit-ticks i {
+  width: 1px;
+  height: 6px;
+  background: currentColor;
+  opacity: .35;
+  transition: height .3s cubic-bezier(.16, 1, .3, 1), opacity .3s ease;
+}
+
+#selected-work .orbit-ticks i.is-lit { height: 12px; opacity: 1; }
+
+@media (max-width: 640px) {
+  #selected-work .orbit-topline,
+  #selected-work .orbit-topline span { font-size: .72rem; }
+  #selected-work .orbit-topline span:last-child { display: none; }
+}
+
+/*
+ * Archive. The orbit ends where it began: the six cards gather in the middle of the sky and become
+ * one large poster, centred like the hero and the halo. The front poster is exactly the orbit card
+ * scaled by --poster-scale (frame included), and sits at the point the cards gather to in
+ * cardGeometry, so the cards turn into it without a jump. The other posters fan out behind it like
+ * a hand of cards, the deck the orbit opened from. It reads as the orbit's ending, not a new section,
+ * so there is no heading of its own. Posters move by transform and opacity only.
+ */
+#selected-work .orbit-archive-selector {
+  --archive-ink: #0b1e3a;
+  --card-w: clamp(11rem, 17vw, 15rem);
+  --poster-scale: var(--archive-scale, 1.9); /* set from archiveScale() in ProjectOrbitShowcase */
+  --poster-y: -10vh;
+  --poster-w: calc(var(--card-w) * var(--poster-scale));
+  --poster-h: calc(var(--poster-w) * 9 / 16);
+  display: block;
+  inset: 0;
+  overflow: visible;
+  color: var(--archive-ink);
+}
+
+/* The stage is a point at the poster's centre; every poster is placed from it. */
+#selected-work .orbit-archive-stage {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + var(--poster-y));
+  width: 0;
+  height: 0;
+}
+
+#selected-work .orbit-archive-poster {
+  --a: max(var(--o), calc(var(--o) * -1));
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--poster-w);
+  height: var(--poster-h);
+  padding: calc(.35rem * var(--poster-scale));
+  border-radius: calc(.8rem * var(--poster-scale));
+  background: #fff;
+  box-shadow: 0 1.4rem 2.6rem -1.2rem rgba(70, 36, 90, .45), 1.6rem 2.4rem 3.4rem -1.8rem rgba(118, 50, 86, .3);
+  z-index: calc(20 - var(--a));
+  transition: transform .75s cubic-bezier(.16, 1, .3, 1), opacity .55s ease;
+}
+
+#selected-work .orbit-archive-poster > a,
+#selected-work .orbit-archive-poster > button {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: calc(.55rem * var(--poster-scale));
+  background: none;
+  cursor: pointer;
+}
+
+#selected-work .orbit-archive-poster .orbit-project-poster,
+#selected-work .orbit-archive-poster picture,
+#selected-work .orbit-archive-poster img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+#selected-work .orbit-archive-poster > :focus-visible { outline: 2px solid var(--archive-ink); outline-offset: 4px; }
+
+/* The others fan out behind the front poster like a hand of cards. */
+#selected-work .orbit-archive-poster {
+  transform: translate(-50%, -50%) translate(calc(var(--o) * var(--poster-w) * .053), calc(var(--a) * var(--poster-w) * -.0055)) rotate(calc(var(--o) * 2.6deg)) scale(calc(1 - var(--a) * .06));
+  opacity: calc(1 - var(--a) * .14);
+}
+
+/* Copy under the poster, centred. */
+#selected-work .orbit-archive-meta {
+  position: absolute;
+  top: calc(50% + var(--poster-y) + var(--poster-h) / 2 + clamp(1.2rem, 3vh, 2rem));
+  left: 50%;
+  translate: -50% 0;
+  width: min(max(36rem, 52vh), 90vw);
+  text-align: center;
+}
+
+#selected-work .orbit-archive-count {
+  display: inline-flex;
+  align-items: center;
+  gap: .9rem;
+  font-size: clamp(.78rem, 1.15vh, 1rem);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+#selected-work .orbit-archive-count b { font-weight: 800; }
+#selected-work .orbit-archive-count em { font-style: normal; }
+
+#selected-work .orbit-archive-count button {
+  display: grid;
+  place-items: center;
+  width: clamp(2rem, 3vh, 2.6rem);
+  height: clamp(2rem, 3vh, 2.6rem);
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--archive-ink) 30%, transparent);
+  border-radius: 50%;
+  background: rgba(255, 250, 242, .3);
+  color: var(--archive-ink);
+  cursor: pointer;
+  transition: background-color .2s ease, border-color .2s ease;
+}
+
+#selected-work .orbit-archive-count button:hover:not(:disabled),
+#selected-work .orbit-archive-count button:focus-visible { border-color: var(--archive-ink); background: rgba(255, 250, 242, .7); }
+#selected-work .orbit-archive-count button:disabled { opacity: .3; cursor: default; }
+
+#selected-work .orbit-archive-meta h3 {
+  margin: .5rem 0 .35rem;
+  color: var(--archive-ink);
+  font-size: clamp(1.4rem, 3.6vh, 2.8rem);
+  letter-spacing: -.035em;
+  line-height: 1.08;
+}
+
+#selected-work .orbit-archive-meta > p {
+  display: block;
+  margin: 0 auto;
+  max-width: max(34rem, 40vh);
+  color: var(--archive-ink);
+  font-size: clamp(.9rem, 1.35vh, 1.15rem);
+  line-height: 1.5;
+}
+
+#selected-work .orbit-archive-meta ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: .7rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+#selected-work .orbit-archive-meta li { padding: 0 .6rem; border: 0; border-radius: 0; background: none; color: var(--archive-ink); font-size: clamp(.74rem, 1.1vh, .95rem); font-weight: 600; }
+#selected-work .orbit-archive-meta li + li { border-left: 1px solid color-mix(in srgb, var(--archive-ink) 35%, transparent); }
+
+#selected-work .orbit-archive-actions { display: flex; justify-content: center; gap: 1.6rem; margin-top: .9rem; }
+
+#selected-work .orbit-archive-actions a {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding-bottom: .2rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--archive-ink) 40%, transparent);
+  color: var(--archive-ink);
+  font-size: clamp(.72rem, 1.05vh, .92rem);
+  font-weight: 750;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+#selected-work .orbit-archive-actions a:hover,
+#selected-work .orbit-archive-actions a:focus-visible { border-bottom-color: var(--archive-ink); }
+
+/* Phones: the card is 27vw there, so a bigger scale. */
+@media (max-width: 680px) {
+  #selected-work .orbit-archive-selector { --card-w: 27vw; --poster-y: -16vh; inset: 0; display: block; overflow: visible; }
+  #selected-work .orbit-archive-count em { display: none; }
+  #selected-work .orbit-archive-actions { gap: 1.1rem; }
+  #selected-work .orbit-archive-actions a { font-size: .66rem; white-space: nowrap; }
+  #selected-work .orbit-archive-poster {
+    transform: translate(-50%, -50%) translate(calc(var(--o) * 1.1rem), calc(var(--a) * -.3rem)) rotate(calc(var(--o) * 2.2deg)) scale(calc(1 - var(--a) * .05));
+  }
+  #selected-work .orbit-archive-meta > p { font-size: .84rem; }
+}
