@@ -1,0 +1,401 @@
+body:has(.placelog-detail) {
+  background: #bad9ec;
+}
+
+.site-shell:has(.placelog-detail) {
+  --placelog-ink: #16365c;
+  --placelog-muted: #4d6b82;
+  --placelog-line: rgba(22, 54, 92, .2);
+  color: var(--placelog-ink);
+  border-color: var(--placelog-line);
+  background:
+    radial-gradient(ellipse 58% 30rem at 84% 8%, rgba(255, 255, 255, .44), transparent 74%),
+    radial-gradient(ellipse 52% 34rem at 8% 52%, rgba(103, 169, 210, .12), transparent 76%),
+    linear-gradient(180deg, #bad9ec 0%, #dceaf1 46%, #eee9dd 72%, #f3dbad 100%);
+}
+
+.site-shell:has(.placelog-detail) .site-header:not(.is-condensed) .brand,
+.site-shell:has(.placelog-detail) .site-header:not(.is-condensed) .brand-copy,
+.site-shell:has(.placelog-detail) .site-header:not(.is-condensed) .nav-links,
+.site-shell:has(.placelog-detail) .site-header:not(.is-condensed) .availability {
+  color: var(--placelog-ink);
+}
+
+.site-shell:has(.placelog-detail) .site-header:not(.is-condensed) .availability {
+  border-color: var(--placelog-line);
+  background: rgba(255, 255, 255, .2);
+}
+
+.site-shell:has(.placelog-detail) .site-header:not(.is-condensed) .nav-links > a::after {
+  background: var(--placelog-ink);
+}
+
+.site-shell:has(.placelog-detail) .site-footer {
+  color: var(--placelog-muted);
+  border-top-color: var(--placelog-line);
+  background: transparent;
+}
+
+.placelog-detail {
+  width: min(100%, 90rem);
+  margin-inline: auto;
+  padding: clamp(7rem, 9vw, 9rem) var(--page-gutter) clamp(6rem, 10vw, 10rem);
+}
+
+.placelog-back {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: .65rem;
+  color: var(--placelog-muted);
+  font-size: .76rem;
+  font-weight: 700;
+  transition: color .2s ease, gap .25s cubic-bezier(.16, 1, .3, 1);
+}
+
+.placelog-back:hover {
+  gap: .9rem;
+  color: var(--placelog-ink);
+}
+
+.placelog-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(18rem, 30rem);
+  grid-template-areas:
+    "kicker kicker"
+    "title title"
+    "thesis poster"
+    "overview poster";
+  column-gap: clamp(3rem, 8vw, 9rem);
+  margin-top: clamp(2.5rem, 5vw, 5rem);
+}
+
+.placelog-kicker {
+  grid-area: kicker;
+  margin: 0 0 1rem;
+  color: var(--placelog-muted);
+  font-size: .78rem;
+  font-weight: 650;
+}
+
+.placelog-hero h1 {
+  grid-area: title;
+  display: flex;
+  align-items: baseline;
+  margin: 0 0 clamp(3rem, 6vw, 6rem);
+  font-size: clamp(5.5rem, 14vw, 12rem);
+  font-weight: 620;
+  line-height: .72;
+  letter-spacing: -.085em;
+}
+
+.placelog-hero h1 span:last-child {
+  display: inline-block;
+  transform: translateY(.2em);
+}
+
+.placelog-thesis {
+  grid-area: thesis;
+  max-width: 29ch;
+  margin: 0;
+  font-size: clamp(1.35rem, 2.35vw, 2.15rem);
+  font-weight: 560;
+  line-height: 1.22;
+  letter-spacing: -.035em;
+}
+
+.placelog-poster {
+  grid-area: poster;
+  width: min(100%, 30rem);
+  margin: .4rem 0 0;
+  justify-self: end;
+  transform: rotate(1.15deg);
+  transform-origin: 55% 45%;
+  transition: transform .5s cubic-bezier(.16, 1, .3, 1);
+}
+
+.placelog-poster:hover {
+  transform: rotate(.25deg) translateY(-.35rem);
+}
+
+.placelog-poster picture,
+.placelog-poster img {
+  display: block;
+  width: 100%;
+}
+
+.placelog-poster img {
+  border-radius: .75rem;
+  box-shadow: 0 1.4rem 3.5rem rgba(33, 78, 119, .14);
+}
+
+.placelog-poster figcaption {
+  margin-top: .8rem;
+  color: var(--placelog-muted);
+  font-size: .7rem;
+  line-height: 1.4;
+  text-align: right;
+}
+
+.placelog-overview {
+  grid-area: overview;
+  max-width: 43rem;
+  margin-top: clamp(4rem, 8vw, 7rem);
+  color: var(--placelog-muted);
+  font-size: clamp(1rem, 1.25vw, 1.12rem);
+  line-height: 1.78;
+}
+
+.placelog-overview p:first-child {
+  color: var(--placelog-ink);
+  font-weight: 650;
+}
+
+.placelog-role {
+  display: grid;
+  grid-template-columns: minmax(17rem, .72fr) minmax(0, 1fr);
+  gap: clamp(3rem, 9vw, 10rem);
+  align-items: start;
+  margin: clamp(8rem, 15vw, 15rem) 0;
+}
+
+.placelog-role h2 {
+  position: sticky;
+  top: 7rem;
+  font-size: clamp(3.3rem, 6.4vw, 6.5rem);
+  line-height: .9;
+  letter-spacing: -.065em;
+}
+
+.placelog-role-copy > p {
+  max-width: 42rem;
+  margin: 0 0 3rem;
+  font-size: clamp(1.15rem, 1.7vw, 1.45rem);
+  line-height: 1.55;
+}
+
+.placelog-role ul {
+  margin: 0;
+  padding: 0;
+  columns: 2;
+  column-gap: clamp(2rem, 5vw, 5rem);
+  list-style: none;
+}
+
+.placelog-role li {
+  position: relative;
+  break-inside: avoid;
+  margin: 0 0 1.35rem;
+  padding-left: 1.15rem;
+  color: var(--placelog-muted);
+  font-size: .94rem;
+  line-height: 1.65;
+}
+
+.placelog-role li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .68em;
+  width: .35rem;
+  height: .35rem;
+  border-radius: 50%;
+  background: var(--placelog-ink);
+}
+
+.placelog-story {
+  display: flow-root;
+}
+
+.placelog-story-block {
+  width: min(100%, 46rem);
+  margin: 0 0 clamp(7rem, 12vw, 12rem) 6%;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--placelog-line);
+}
+
+.placelog-story-block.is-offset {
+  margin-left: auto;
+  margin-right: 5%;
+}
+
+.placelog-story-block h2 {
+  max-width: 14ch;
+  margin-bottom: 2rem;
+  font-size: clamp(2.5rem, 4.7vw, 4.8rem);
+  line-height: .96;
+  letter-spacing: -.055em;
+}
+
+.placelog-story-block p {
+  max-width: 43rem;
+  color: var(--placelog-muted);
+  font-size: clamp(1rem, 1.2vw, 1.08rem);
+  line-height: 1.8;
+}
+
+.placelog-story-block p + p {
+  margin-top: 1.4rem;
+}
+
+.placelog-system-line {
+  margin-top: 2.5rem !important;
+  color: var(--placelog-ink) !important;
+  font-size: .82rem !important;
+  font-weight: 700;
+  line-height: 1.7 !important;
+}
+
+.placelog-pullquote {
+  width: min(100%, 61rem);
+  margin: clamp(8rem, 13vw, 13rem) auto;
+  color: var(--placelog-ink);
+  font-size: clamp(2.7rem, 6.6vw, 6.5rem);
+  font-weight: 580;
+  line-height: .98;
+  letter-spacing: -.06em;
+  text-wrap: balance;
+}
+
+.placelog-learning {
+  display: grid;
+  grid-template-columns: minmax(8rem, .28fr) minmax(0, .9fr) minmax(18rem, .55fr);
+  gap: clamp(2rem, 6vw, 7rem);
+  align-items: start;
+  margin-top: clamp(10rem, 16vw, 16rem);
+  padding: clamp(2.5rem, 5vw, 5rem) 0;
+  border-block: 1px solid var(--placelog-line);
+}
+
+.placelog-learning > p {
+  margin: .5rem 0 0;
+  color: var(--placelog-muted);
+  font-size: .76rem;
+  font-weight: 700;
+}
+
+.placelog-learning h2 {
+  font-size: clamp(2.8rem, 5.3vw, 5.5rem);
+  line-height: .95;
+  letter-spacing: -.06em;
+}
+
+.placelog-learning > div {
+  color: var(--placelog-muted);
+  line-height: 1.75;
+}
+
+.placelog-learning > div p:first-child {
+  margin-top: .45rem;
+}
+
+.placelog-back-bottom {
+  margin-top: 3rem;
+}
+
+@media (max-width: 900px) {
+  .placelog-hero {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "kicker"
+      "title"
+      "thesis"
+      "poster"
+      "overview";
+  }
+
+  .placelog-hero h1 {
+    margin-bottom: 3.5rem;
+  }
+
+  .placelog-poster {
+    width: min(74%, 30rem);
+    margin-top: 3.5rem;
+  }
+
+  .placelog-overview {
+    margin-top: 4rem;
+  }
+
+  .placelog-role {
+    grid-template-columns: 1fr;
+    gap: 3.5rem;
+  }
+
+  .placelog-role h2 {
+    position: static;
+  }
+
+  .placelog-learning {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .placelog-learning > p {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 620px) {
+  .placelog-detail {
+    padding-top: 5.75rem;
+  }
+
+  .placelog-hero {
+    margin-top: 2rem;
+  }
+
+  .placelog-hero h1 {
+    font-size: clamp(4.6rem, 21.5vw, 6.8rem);
+    line-height: .78;
+  }
+
+  .placelog-thesis {
+    font-size: 1.3rem;
+  }
+
+  .placelog-poster {
+    width: 92%;
+    margin-top: 3rem;
+  }
+
+  .placelog-role {
+    margin-block: 7.5rem;
+  }
+
+  .placelog-role ul {
+    columns: 1;
+  }
+
+  .placelog-story-block,
+  .placelog-story-block.is-offset {
+    width: 100%;
+    margin-right: 0;
+    margin-left: 0;
+    margin-bottom: 6.5rem;
+  }
+
+  .placelog-pullquote {
+    margin-block: 8rem;
+  }
+
+  .placelog-learning {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-top: 8rem;
+  }
+
+  .placelog-learning > p {
+    grid-column: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .placelog-back,
+  .placelog-poster {
+    transition: none;
+  }
+
+  .placelog-poster:hover {
+    transform: rotate(1.15deg);
+  }
+}
