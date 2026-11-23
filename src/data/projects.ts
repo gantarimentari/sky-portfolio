@@ -18,8 +18,11 @@ import apdWebp1120 from '../assets/projects/apd-detection-1120.webp'
 import apdWebp720 from '../assets/projects/apd-detection-720.webp'
 
 export interface CaseStudySection { title: string; body: string }
+export type ProjectMoment = 'clear-morning' | 'golden-hour' | 'soft-afternoon' | 'moonlit-night' | 'twilight' | 'first-light'
+export interface ProjectContribution { title: string; body: string }
 export interface Project {
   slug: string; title: string; category: string; role: string; summary: string
+  moment: ProjectMoment; momentLabel: string; contributions: ProjectContribution[]
   technologies: string[]; featured?: boolean
   accent: 'signal' | 'ink' | 'paper' | 'grid' | 'beam' | 'orbit'
   screenshot?: {
@@ -34,8 +37,14 @@ export const projects: Project[] = [
   {
     slug: 'apd-detection', title: 'APD Detection', category: 'Web Application / Frontend Development',
     role: 'Frontend Developer · Collaborative Project', accent: 'signal', featured: true,
+    moment: 'clear-morning', momentLabel: 'Clear Morning',
     summary: 'A monitoring interface that brings authentication, operational data, CCTV views, and violation evidence into one clear dashboard experience.',
     technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'FastAPI'],
+    contributions: [
+      { title: 'Core workflows', body: 'Built authentication and dashboard flows for the monitoring application.' },
+      { title: 'Operational interfaces', body: 'Developed user and location management alongside CCTV monitoring views.' },
+      { title: 'API integration', body: 'Connected frontend workflows to FastAPI endpoints and presented violation evidence clearly.' },
+    ],
     screenshot: { src: apdScreenshot, alt: 'APD Detection monitoring dashboard interface showcase', webp: { small: apdWebp720, large: apdWebp1120 } },
     sections: [
       { title: 'Project Overview', body: 'A collaborative safety monitoring application. The frontend connects a set of operational workflows—from user and location management to CCTV monitoring and violation history.' },
@@ -47,8 +56,14 @@ export const projects: Project[] = [
   },
   {
     slug: 'placelog', title: 'PlaceLog', category: 'Full-Stack Web Application', role: 'Full-Stack Developer', accent: 'ink', featured: true,
+    moment: 'golden-hour', momentLabel: 'Golden Hour',
     summary: 'A full-stack place logging application focused on reliable API integration, maintainable CRUD flows, testing, and delivery automation.',
-    technologies: ['Laravel', 'Vue', 'Sanctum', 'Docker', 'GitHub Actions'],
+    technologies: ['Vue', 'TypeScript', 'Laravel', 'MySQL', 'Docker', 'GitHub Actions'],
+    contributions: [
+      { title: 'Built', body: 'Created a Vue and TypeScript interface with a Laravel REST API, Sanctum authentication, and MySQL-backed CRUD workflows.' },
+      { title: 'Tested', body: 'Validated successful, invalid, and unauthorized API behavior through Postman and Laravel feature tests.' },
+      { title: 'Delivered', body: 'Configured Docker, CI/CD, health checks, structured logging, and Prometheus/Grafana monitoring.' },
+    ],
     screenshot: { src: placeLogScreenshot, alt: 'PlaceLog travel journal application interface showcase', webp: { small: placeLogWebp720, large: placeLogWebp1120 } },
     sections: [
       { title: 'Project Overview', body: 'A full-stack application pairing a Vue interface with a Laravel REST API for authenticated place management.' },
@@ -61,8 +76,14 @@ export const projects: Project[] = [
   },
   {
     slug: 'fanina-company-profile', title: 'Company Profile drh. Fanina', category: 'Frontend / Business Website', role: 'Frontend Developer · Automated UI Testing', accent: 'paper',
+    moment: 'soft-afternoon', momentLabel: 'Soft Afternoon',
     summary: 'A responsive company profile website developed for a veterinary business, with automated UI testing covering key authentication and profile workflows.',
     technologies: ['Next.js', 'React', 'Tailwind CSS', 'Java', 'Selenium'],
+    contributions: [
+      { title: 'Responsive frontend', body: 'Implemented the clinic website as a responsive interface using reusable React components.' },
+      { title: 'Form behavior', body: 'Handled interface validation and key authentication and profile workflows.' },
+      { title: 'Automated testing', body: 'Used Java and Selenium to test positive and negative login scenarios, empty fields, and profile interactions.' },
+    ],
     screenshot: { src: veterinaryScreenshot, alt: 'Veterinary company profile website interface showcase', webp: { small: veterinaryWebp720, large: veterinaryWebp1120 } },
     sections: [
       { title: 'Project Overview', body: 'A responsive company profile website built for drh. Fanina.' },
@@ -71,11 +92,28 @@ export const projects: Project[] = [
       { title: 'Technology Stack', body: 'Next.js, React, Tailwind CSS, Java, and Selenium.' },
     ],
   },
-  { slug: 'dont-forget-sleep', title: "Don't Forget Sleep", category: 'Web Application / Personal Project', role: 'Personal Project', accent: 'grid', summary: 'A sleep tracking application exploring how simple digital tools can support more intentional rest habits.', technologies: ['Details in progress'], screenshot: { src: sleepScreenshot, alt: "Don't Forget Sleep application interface showcase", webp: { small: sleepWebp720, large: sleepWebp1120 } } },
+  {
+    slug: 'dont-forget-sleep', title: "Don't Forget Sleep", category: 'Mobile Application',
+    role: 'Flutter Developer · Collaborative Project', accent: 'grid',
+    moment: 'moonlit-night', momentLabel: 'Moonlit Night',
+    summary: 'A Flutter sleep-tracking application designed to help users record their sleep and maintain more intentional rest routines.',
+    technologies: ['Flutter', 'Dart'],
+    contributions: [
+      { title: 'Mobile interface', body: 'Contributed to the Flutter user interface and navigation across the application.' },
+      { title: 'Sleep routines', body: 'Worked on reminders and sleep-record experiences that support daily tracking.' },
+      { title: 'Application integration', body: 'Connected interface flows with the wider application implementation in a collaborative project.' },
+    ],
+    screenshot: { src: sleepScreenshot, alt: "Don't Forget Sleep application interface showcase", webp: { small: sleepWebp720, large: sleepWebp1120 } },
+  },
   {
     slug: 'career-fit-ai', title: 'Career Fit AI', category: 'AI-Related Application', role: 'Frontend Developer · UI/UX Designer', accent: 'beam',
+    moment: 'twilight', momentLabel: 'Twilight',
     summary: 'An AI-assisted CV screening and job-matching platform developed for GEMASTIK 2026 by a selected UGM contingent. I contributed to the frontend development and UI/UX design.',
     technologies: [],
+    contributions: [
+      { title: 'Interface design', body: 'Designed the user interface for the CV-screening and career-exploration experience.' },
+      { title: 'Frontend contribution', body: 'Developed the frontend collaboratively after the team was selected through UGM’s contingent process for GEMASTIK 2026.' },
+    ],
     screenshot: { src: careerFitScreenshot, alt: 'Career Fit AI application interface showcase', webp: { small: careerFitWebp720, large: careerFitWebp1120 } },
     sections: [
       { title: 'Project Overview', body: 'Career Fit AI is an AI-assisted CV screening and job-matching platform developed for GEMASTIK 2026 by a selected UGM contingent.' },
@@ -84,8 +122,13 @@ export const projects: Project[] = [
   },
   {
     slug: 'sift', title: 'SIFT', category: 'AI-Related Application', role: 'Frontend Developer · Collaborative Project', accent: 'orbit',
+    moment: 'first-light', momentLabel: 'First Light',
     summary: 'An AI-powered recruitment platform developed with the GDGoC UGM project team. I contributed to the frontend using Next.js and Tailwind CSS.',
     technologies: ['Next.js', 'Tailwind CSS'],
+    contributions: [
+      { title: 'Frontend implementation', body: 'Contributed responsive interface work using Next.js and Tailwind CSS.' },
+      { title: 'Team delivery', body: 'Worked within the GDGoC UGM project team to translate shared product decisions into frontend screens.' },
+    ],
     screenshot: { src: siftScreenshot, alt: 'SIFT AI-powered hiring dashboard interface showcase', webp: { small: siftWebp720, large: siftWebp1120 } },
     sections: [
       { title: 'Project Overview', body: 'SIFT is an AI-powered recruitment platform developed within a GDGoC UGM project team.' },

@@ -9,9 +9,8 @@ body:has(.placelog-detail) {
   color: var(--placelog-ink);
   border-color: var(--placelog-line);
   background:
-    radial-gradient(ellipse 58% 30rem at 84% 8%, rgba(255, 255, 255, .44), transparent 74%),
-    radial-gradient(ellipse 52% 34rem at 8% 52%, rgba(103, 169, 210, .12), transparent 76%),
-    linear-gradient(180deg, #bad9ec 0%, #dceaf1 46%, #eee9dd 72%, #f3dbad 100%);
+    radial-gradient(ellipse 58% 28rem at 84% 8%, rgba(255, 255, 255, .44), transparent 74%),
+    linear-gradient(180deg, #bad9ec 0%, #dceaf1 58%, #f2dfb9 100%);
 }
 
 .site-shell:has(.placelog-detail) .site-header:not(.is-condensed) .brand,
@@ -38,8 +37,9 @@ body:has(.placelog-detail) {
 
 .placelog-detail {
   width: min(100%, 90rem);
+  min-height: 100vh;
   margin-inline: auto;
-  padding: clamp(7rem, 9vw, 9rem) var(--page-gutter) clamp(6rem, 10vw, 10rem);
+  padding: clamp(7rem, 9vw, 8.5rem) var(--page-gutter) clamp(4rem, 7vw, 7rem);
 }
 
 .placelog-back {
@@ -58,64 +58,51 @@ body:has(.placelog-detail) {
   color: var(--placelog-ink);
 }
 
-.placelog-hero {
+.placelog-snapshot {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(18rem, 30rem);
+  grid-template-columns: minmax(0, 1fr) minmax(18rem, 28rem);
   grid-template-areas:
-    "kicker kicker"
-    "title title"
-    "thesis poster"
-    "overview poster";
-  column-gap: clamp(3rem, 8vw, 9rem);
-  margin-top: clamp(2.5rem, 5vw, 5rem);
+    "title poster"
+    "context poster";
+  column-gap: clamp(3rem, 9vw, 10rem);
+  align-items: end;
+  margin-top: clamp(2.5rem, 5vw, 4.5rem);
 }
 
-.placelog-kicker {
-  grid-area: kicker;
-  margin: 0 0 1rem;
-  color: var(--placelog-muted);
-  font-size: .78rem;
-  font-weight: 650;
-}
-
-.placelog-hero h1 {
+.placelog-title-block {
   grid-area: title;
-  display: flex;
-  align-items: baseline;
-  margin: 0 0 clamp(3rem, 6vw, 6rem);
-  font-size: clamp(5.5rem, 14vw, 12rem);
+  align-self: start;
+}
+
+.placelog-title-block h1 {
+  margin: 0;
+  font-size: clamp(5.5rem, 12vw, 10.5rem);
   font-weight: 620;
-  line-height: .72;
+  line-height: .78;
   letter-spacing: -.085em;
 }
 
-.placelog-hero h1 span:last-child {
-  display: inline-block;
-  transform: translateY(.2em);
-}
-
-.placelog-thesis {
-  grid-area: thesis;
-  max-width: 29ch;
-  margin: 0;
-  font-size: clamp(1.35rem, 2.35vw, 2.15rem);
+.placelog-title-block p {
+  max-width: 34ch;
+  margin: clamp(2.25rem, 4vw, 3.5rem) 0 0;
+  font-size: clamp(1.25rem, 2vw, 1.85rem);
   font-weight: 560;
-  line-height: 1.22;
+  line-height: 1.3;
   letter-spacing: -.035em;
 }
 
 .placelog-poster {
   grid-area: poster;
-  width: min(100%, 30rem);
-  margin: .4rem 0 0;
+  width: min(100%, 28rem);
+  margin: 0;
   justify-self: end;
-  transform: rotate(1.15deg);
-  transform-origin: 55% 45%;
-  transition: transform .5s cubic-bezier(.16, 1, .3, 1);
+  transform: rotate(1deg);
+  transform-origin: center;
+  transition: transform .45s cubic-bezier(.16, 1, .3, 1);
 }
 
 .placelog-poster:hover {
-  transform: rotate(.25deg) translateY(-.35rem);
+  transform: rotate(.15deg) translateY(-.3rem);
 }
 
 .placelog-poster picture,
@@ -126,231 +113,226 @@ body:has(.placelog-detail) {
 
 .placelog-poster img {
   border-radius: .75rem;
-  box-shadow: 0 1.4rem 3.5rem rgba(33, 78, 119, .14);
+  box-shadow: 0 1.3rem 3rem rgba(33, 78, 119, .14);
 }
 
-.placelog-poster figcaption {
-  margin-top: .8rem;
-  color: var(--placelog-muted);
-  font-size: .7rem;
-  line-height: 1.4;
-  text-align: right;
-}
-
-.placelog-overview {
-  grid-area: overview;
-  max-width: 43rem;
-  margin-top: clamp(4rem, 8vw, 7rem);
-  color: var(--placelog-muted);
-  font-size: clamp(1rem, 1.25vw, 1.12rem);
-  line-height: 1.78;
-}
-
-.placelog-overview p:first-child {
-  color: var(--placelog-ink);
-  font-weight: 650;
-}
-
-.placelog-role {
-  display: grid;
-  grid-template-columns: minmax(17rem, .72fr) minmax(0, 1fr);
-  gap: clamp(3rem, 9vw, 10rem);
-  align-items: start;
-  margin: clamp(8rem, 15vw, 15rem) 0;
-}
-
-.placelog-role h2 {
-  position: sticky;
-  top: 7rem;
-  font-size: clamp(3.3rem, 6.4vw, 6.5rem);
-  line-height: .9;
-  letter-spacing: -.065em;
-}
-
-.placelog-role-copy > p {
+.placelog-context {
+  grid-area: context;
+  align-self: end;
   max-width: 42rem;
-  margin: 0 0 3rem;
-  font-size: clamp(1.15rem, 1.7vw, 1.45rem);
-  line-height: 1.55;
+  margin-top: clamp(3rem, 6vw, 5.5rem);
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--placelog-line);
 }
 
-.placelog-role ul {
+.placelog-context p {
   margin: 0;
-  padding: 0;
-  columns: 2;
-  column-gap: clamp(2rem, 5vw, 5rem);
-  list-style: none;
-}
-
-.placelog-role li {
-  position: relative;
-  break-inside: avoid;
-  margin: 0 0 1.35rem;
-  padding-left: 1.15rem;
-  color: var(--placelog-muted);
-  font-size: .94rem;
   line-height: 1.65;
 }
 
-.placelog-role li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: .68em;
-  width: .35rem;
-  height: .35rem;
-  border-radius: 50%;
-  background: var(--placelog-ink);
+.placelog-context p:first-child {
+  font-weight: 700;
 }
 
-.placelog-story {
-  display: flow-root;
+.placelog-context p:last-child {
+  margin-top: .35rem;
+  color: var(--placelog-muted);
+  font-size: .9rem;
 }
 
-.placelog-story-block {
-  width: min(100%, 46rem);
-  margin: 0 0 clamp(7rem, 12vw, 12rem) 6%;
+.placelog-built-with {
+  display: grid;
+  grid-template-columns: minmax(8rem, .25fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 6rem);
+  align-items: center;
+  margin: clamp(4.5rem, 7vw, 6.5rem) 0;
+  padding-block: 1.25rem;
+  border-block: 1px solid var(--placelog-line);
+}
+
+.placelog-built-with h2 {
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.placelog-built-with ul {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(1.5rem, 3.5vw, 3.5rem);
+  min-width: max-content;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.placelog-built-with li {
+  display: inline-flex;
+  align-items: center;
+  gap: .65rem;
+  color: var(--placelog-muted);
+  font-size: .76rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.placelog-built-with img {
+  width: 1.7rem;
+  height: 1.7rem;
+  object-fit: contain;
+}
+
+.placelog-compact-story {
+  display: grid;
+  grid-template-columns: minmax(18rem, .85fr) repeat(3, minmax(0, 1fr));
+  gap: clamp(2rem, 4.5vw, 5rem);
+  align-items: start;
+  margin: clamp(5.5rem, 8vw, 7.5rem) 0 clamp(5.5rem, 8vw, 7rem);
+}
+
+.placelog-compact-story > h2 {
+  max-width: 10ch;
+  font-size: clamp(3rem, 5vw, 5rem);
+  line-height: .93;
+  letter-spacing: -.06em;
+}
+
+.placelog-story-beat {
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--placelog-line);
+}
+
+.placelog-story-beat h3 {
+  margin: 0 0 1.2rem;
+  font-size: clamp(1.7rem, 2.6vw, 2.5rem);
+  font-weight: 620;
+  line-height: 1;
+  letter-spacing: -.045em;
+}
+
+.placelog-story-beat p {
+  margin: 0;
+  color: var(--placelog-muted);
+  font-size: .92rem;
+  line-height: 1.72;
+}
+
+.beat-tested {
+  margin-top: 2.5rem;
+}
+
+.beat-delivered {
+  margin-top: 5rem;
+}
+
+.placelog-showcase {
+  display: grid;
+  grid-template-columns: minmax(10rem, .3fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 7rem);
+  align-items: start;
+  margin: 0 0 clamp(5rem, 8vw, 7rem);
+}
+
+.placelog-showcase > div {
+  padding-top: .4rem;
+}
+
+.placelog-showcase p {
+  margin: 0 0 .75rem;
+  font-size: .82rem;
+  font-weight: 700;
+}
+
+.placelog-showcase figcaption {
+  max-width: 18rem;
+  color: var(--placelog-muted);
+  font-size: .78rem;
+  line-height: 1.55;
+}
+
+.placelog-showcase img {
+  display: block;
+  width: 100%;
+  max-height: 25rem;
+  object-fit: cover;
+  object-position: 62% 48%;
+  border-radius: .7rem;
+  box-shadow: 0 1.1rem 2.8rem rgba(33, 78, 119, .12);
+}
+
+.placelog-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(1.5rem, 4vw, 4rem);
   padding-top: 1.5rem;
   border-top: 1px solid var(--placelog-line);
 }
 
-.placelog-story-block.is-offset {
-  margin-left: auto;
-  margin-right: 5%;
-}
-
-.placelog-story-block h2 {
-  max-width: 14ch;
-  margin-bottom: 2rem;
-  font-size: clamp(2.5rem, 4.7vw, 4.8rem);
-  line-height: .96;
-  letter-spacing: -.055em;
-}
-
-.placelog-story-block p {
-  max-width: 43rem;
-  color: var(--placelog-muted);
-  font-size: clamp(1rem, 1.2vw, 1.08rem);
-  line-height: 1.8;
-}
-
-.placelog-story-block p + p {
-  margin-top: 1.4rem;
-}
-
-.placelog-system-line {
-  margin-top: 2.5rem !important;
-  color: var(--placelog-ink) !important;
-  font-size: .82rem !important;
-  font-weight: 700;
-  line-height: 1.7 !important;
-}
-
-.placelog-pullquote {
-  width: min(100%, 61rem);
-  margin: clamp(8rem, 13vw, 13rem) auto;
-  color: var(--placelog-ink);
-  font-size: clamp(2.7rem, 6.6vw, 6.5rem);
-  font-weight: 580;
-  line-height: .98;
-  letter-spacing: -.06em;
-  text-wrap: balance;
-}
-
-.placelog-learning {
-  display: grid;
-  grid-template-columns: minmax(8rem, .28fr) minmax(0, .9fr) minmax(18rem, .55fr);
-  gap: clamp(2rem, 6vw, 7rem);
-  align-items: start;
-  margin-top: clamp(10rem, 16vw, 16rem);
-  padding: clamp(2.5rem, 5vw, 5rem) 0;
-  border-block: 1px solid var(--placelog-line);
-}
-
-.placelog-learning > p {
-  margin: .5rem 0 0;
-  color: var(--placelog-muted);
-  font-size: .76rem;
+.placelog-actions a {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: .65rem;
+  font-size: .78rem;
   font-weight: 700;
 }
 
-.placelog-learning h2 {
-  font-size: clamp(2.8rem, 5.3vw, 5.5rem);
-  line-height: .95;
-  letter-spacing: -.06em;
+.placelog-actions a:hover {
+  text-decoration: underline;
+  text-underline-offset: .3rem;
 }
 
-.placelog-learning > div {
-  color: var(--placelog-muted);
-  line-height: 1.75;
-}
-
-.placelog-learning > div p:first-child {
-  margin-top: .45rem;
-}
-
-.placelog-back-bottom {
-  margin-top: 3rem;
-}
-
-@media (max-width: 900px) {
-  .placelog-hero {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "kicker"
-      "title"
-      "thesis"
-      "poster"
-      "overview";
+@media (max-width: 1000px) {
+  .placelog-snapshot {
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 23rem);
+    column-gap: 3rem;
   }
 
-  .placelog-hero h1 {
-    margin-bottom: 3.5rem;
+  .placelog-compact-story {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .placelog-poster {
-    width: min(74%, 30rem);
-    margin-top: 3.5rem;
-  }
-
-  .placelog-overview {
-    margin-top: 4rem;
-  }
-
-  .placelog-role {
-    grid-template-columns: 1fr;
-    gap: 3.5rem;
-  }
-
-  .placelog-role h2 {
-    position: static;
-  }
-
-  .placelog-learning {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .placelog-learning > p {
+  .placelog-compact-story > h2 {
     grid-column: 1 / -1;
+    margin-bottom: 1rem;
+  }
+
+  .placelog-built-with {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+  }
+
+  .placelog-built-with::-webkit-scrollbar {
+    display: none;
   }
 }
 
-@media (max-width: 620px) {
+@media (max-width: 720px) {
   .placelog-detail {
     padding-top: 5.75rem;
   }
 
-  .placelog-hero {
+  .placelog-snapshot {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "title"
+      "poster"
+      "context";
     margin-top: 2rem;
   }
 
-  .placelog-hero h1 {
-    font-size: clamp(4.6rem, 21.5vw, 6.8rem);
-    line-height: .78;
+  .placelog-title-block h1 {
+    font-size: clamp(4.6rem, 21vw, 7rem);
   }
 
-  .placelog-thesis {
-    font-size: 1.3rem;
+  .placelog-title-block p {
+    margin-top: 2rem;
+    font-size: 1.25rem;
   }
 
   .placelog-poster {
@@ -358,34 +340,50 @@ body:has(.placelog-detail) {
     margin-top: 3rem;
   }
 
-  .placelog-role {
-    margin-block: 7.5rem;
+  .placelog-context {
+    margin-top: 3.5rem;
   }
 
-  .placelog-role ul {
-    columns: 1;
-  }
-
-  .placelog-story-block,
-  .placelog-story-block.is-offset {
-    width: 100%;
-    margin-right: 0;
-    margin-left: 0;
-    margin-bottom: 6.5rem;
-  }
-
-  .placelog-pullquote {
-    margin-block: 8rem;
-  }
-
-  .placelog-learning {
+  .placelog-compact-story {
     grid-template-columns: 1fr;
-    gap: 2rem;
-    margin-top: 8rem;
+    gap: 3rem;
+    margin-block: 5rem;
   }
 
-  .placelog-learning > p {
+  .placelog-compact-story > h2 {
     grid-column: auto;
+    margin-bottom: 1rem;
+  }
+
+  .beat-tested,
+  .beat-delivered {
+    margin-top: 0;
+  }
+
+  .placelog-actions {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: .5rem;
+  }
+
+  .placelog-built-with {
+    margin-block: 4rem;
+  }
+
+  .placelog-built-with ul {
+    justify-content: flex-start;
+    padding-right: 1rem;
+  }
+
+  .placelog-showcase {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    margin-bottom: 4.5rem;
+  }
+
+  .placelog-showcase img {
+    height: 15rem;
+    object-position: 67% 48%;
   }
 }
 
@@ -396,6 +394,6 @@ body:has(.placelog-detail) {
   }
 
   .placelog-poster:hover {
-    transform: rotate(1.15deg);
+    transform: rotate(1deg);
   }
 }

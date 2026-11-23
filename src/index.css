@@ -7727,6 +7727,124 @@ body:has(.reference-home) { background:#071a38; }
 .page-sky-dusk { opacity:0; background:linear-gradient(180deg,#263b68 0%,#554b7e 42%,#a95778 76%,#d9786b 100%); }
 .page-sky-night { opacity:0; background:linear-gradient(180deg,#071a38 0%,#14284f 48%,#39305a 100%); }
 .page-sky-stars { opacity:0; background-image:radial-gradient(circle,rgba(255,250,226,.88) 0 1px,transparent 1.2px),radial-gradient(circle,rgba(196,222,255,.72) 0 .7px,transparent .9px); background-position:0 0,23px 31px; background-size:61px 61px,47px 47px; mask-image:linear-gradient(to bottom,#000,rgba(0,0,0,.65) 64%,transparent); }
+.page-sky-sun,
+.page-sky-moon {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+.page-sky-sun {
+  inset: 11vh 13vw auto auto !important;
+  z-index: 2;
+  isolation: isolate;
+  width: clamp(4.75rem, 7.5vw, 7.25rem);
+  background: radial-gradient(circle at 38% 35%, #fffbe2 0 22%, #fff0af 55%, #ffd88a 100%);
+  box-shadow:
+    0 0 3rem rgba(255, 241, 181, .3),
+    0 0 8rem rgba(255, 204, 139, .14);
+}
+.page-sky-sun::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -170%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 245, 198, .34) 0 21%,
+    rgba(255, 233, 178, .2) 35%,
+    rgba(255, 214, 153, .09) 52%,
+    transparent 72%
+  );
+  mix-blend-mode: screen;
+  filter: blur(.35rem);
+  opacity: .9;
+}
+.page-sky-moon {
+  inset: 74vh auto auto 15vw !important;
+  z-index: 3;
+  isolation: isolate;
+  width: clamp(4rem, 6.6vw, 6.25rem);
+  overflow: visible;
+  background:
+    radial-gradient(circle at 67% 31%, rgba(164, 177, 207, .2) 0 7%, transparent 7.8%),
+    radial-gradient(circle at 34% 64%, rgba(151, 164, 196, .16) 0 10%, transparent 10.8%),
+    radial-gradient(circle at 38% 34%, #fffef1 0 30%, #eef1e7 66%, #cdd5df 100%);
+  box-shadow:
+    0 0 2.8rem rgba(225, 235, 255, .28),
+    0 0 7rem rgba(145, 174, 229, .16);
+}
+.page-sky-moon::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -175%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(232, 240, 255, .3) 0 21%,
+    rgba(186, 207, 246, .18) 36%,
+    rgba(126, 158, 222, .08) 54%,
+    transparent 73%
+  );
+  mix-blend-mode: screen;
+  filter: blur(.45rem);
+  opacity: .9;
+}
+.page-sky-shooting-stars {
+  z-index: 4;
+  overflow: hidden;
+}
+.page-sky-shooting-stars i {
+  position: absolute;
+  display: block;
+  width: clamp(5.5rem, 10vw, 9rem);
+  height: 1px;
+  border-radius: 999px;
+  opacity: 0;
+  background: linear-gradient(90deg, transparent, rgba(220, 232, 255, .32) 48%, rgba(255, 252, 229, .94));
+  filter: drop-shadow(0 0 .35rem rgba(216, 230, 255, .58));
+  transform-origin: right center;
+  will-change: transform, opacity;
+  animation: page-shooting-star 7.4s cubic-bezier(.22, .7, .25, 1) infinite;
+}
+.page-sky-shooting-stars i::after {
+  content: '';
+  position: absolute;
+  right: -.08rem;
+  top: 50%;
+  width: .22rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #fffce7;
+  box-shadow: 0 0 .6rem rgba(226, 236, 255, .86);
+  transform: translateY(-50%);
+}
+.page-sky-shooting-stars i:first-child {
+  left: 48vw;
+  top: 12vh;
+  animation-delay: -1.2s;
+}
+.page-sky-shooting-stars i:nth-child(2) {
+  left: 12vw;
+  top: 31vh;
+  width: clamp(4rem, 7vw, 6.5rem);
+  animation-duration: 9.1s;
+  animation-delay: -5.4s;
+}
+@keyframes page-shooting-star {
+  0%, 67% {
+    opacity: 0;
+    transform: translate3d(-10vw, -8vh, 0) rotate(27deg);
+  }
+  71% { opacity: .92; }
+  82% { opacity: .62; }
+  91%, 100% {
+    opacity: 0;
+    transform: translate3d(40vw, 22vh, 0) rotate(27deg);
+  }
+}
 .page-sky-glow { width:48vw; height:48vw; left:auto !important; right:-10vw; bottom:auto !important; border-radius:50%; background:radial-gradient(circle,rgba(255,231,159,.36),rgba(255,169,116,.1) 42%,transparent 70%); filter:blur(1.2rem); }
 .page-sky-cloud-band { inset:0 -20vw !important; }
 .page-sky-cloud-band i { position:absolute; display:block; width:46vw; height:19vw; border-radius:50%; background:radial-gradient(ellipse at 18% 68%,rgba(255,255,255,.5) 0 16%,transparent 17%),radial-gradient(ellipse at 43% 46%,rgba(255,255,255,.56) 0 26%,transparent 27%),radial-gradient(ellipse at 70% 64%,rgba(255,255,255,.45) 0 21%,transparent 22%),linear-gradient(transparent 51%,rgba(255,255,255,.44) 52% 72%,transparent 73%); filter:blur(.35rem); }
@@ -7760,8 +7878,19 @@ body:has(.reference-home) { background:#071a38; }
 .reference-home .reference-contact .contact-ribbon { color:#14284f; background:#ffd16f; }
 .reference-home .reference-contact .reference-grid { opacity:.2; }
 
-@media (max-width:680px) { .page-sky-cloud-band i { width:85vw; height:36vw; }.reference-home .project-orbit-sticky { background:linear-gradient(180deg,rgba(42,93,151,.34),rgba(31,55,103,.48)); } }
-@media (prefers-reduced-motion:reduce) { .page-sky-ambient>div { transform:none !important; }.page-sky-afternoon { opacity:.55; }.page-sky-sunset,.page-sky-horizon,.page-sky-dusk,.page-sky-night,.page-sky-stars { display:none; } }
+@media (max-width:680px) {
+  .page-sky-cloud-band i { width:85vw; height:36vw; }
+  .page-sky-sun { inset:15svh 4vw auto auto !important; width:4.75rem; }
+  .page-sky-moon { inset:76svh auto auto 11vw !important; width:4.25rem; }
+  .page-sky-shooting-stars i:first-child { left:28vw; top:16svh; }
+  .page-sky-shooting-stars i:nth-child(2) { display:none; }
+  .reference-home .project-orbit-sticky { background:linear-gradient(180deg,rgba(42,93,151,.34),rgba(31,55,103,.48)); }
+}
+@media (prefers-reduced-motion:reduce) {
+  .page-sky-sun,
+  .page-sky-moon { transform:none !important; will-change:opacity; }
+  .page-sky-shooting-stars { display:none; }
+}
 
 /* Continuous sky pass: section chrome dissolves into one uninterrupted atmosphere. */
 .reference-home .reference-marquee {

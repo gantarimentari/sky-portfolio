@@ -1,4 +1,4 @@
-import { useEffect, useState, type PropsWithChildren } from 'react'
+import { useEffect, useRef, useState, type PropsWithChildren } from 'react'
 import { Link, useLocation } from 'react-router'
 import Lenis from 'lenis'
 import 'lenis/dist/lenis.css'
@@ -8,6 +8,7 @@ const navItems = [{ to: '/#work', label: 'Work' }, { to: '/#experience', label: 
 
 export function SiteLayout({ children }: PropsWithChildren) {
   const location = useLocation()
+  const lenisRef = useRef<Lenis | null>(null)
   const [isNavCondensed, setIsNavCondensed] = useState(false)
   useEffect(() => {
     // Same glide as porto-v1: Lenis eases the wheel so scroll-linked animations get a steady stream of small steps.
@@ -15,9 +16,16 @@ export function SiteLayout({ children }: PropsWithChildren) {
     const lenis = new Lenis({ autoRaf: true, duration: 1.15, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), wheelMultiplier: .9, touchMultiplier: 1.5,
       // The intro locks scroll with body overflow; hand those events back to the browser so the lock holds.
       virtualScroll: () => document.body.style.overflow !== 'hidden' })
-    return () => lenis.destroy()
+    lenisRef.current = lenis
+    return () => {
+      lenisRef.current = null
+      lenis.destroy()
+    }
   }, [])
-  useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }) }, [location.pathname])
+  useEffect(() => {
+    lenisRef.current?.scrollTo(0, { immediate: true })
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }, [location.pathname])
   useEffect(() => {
     if (!location.hash) return
     const target = location.hash === '#projects' ? '#work' : location.hash
