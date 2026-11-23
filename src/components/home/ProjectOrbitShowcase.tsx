@@ -59,8 +59,9 @@ function cardGeometry(index: number, progress: number, compactViewport: boolean)
   const expand = ease((formation - .48) / .52)
   const turn = progress < ORBIT_START ? 0 : getOrbitTurn(progress)
   const angle = (90 + (index - turn) * 60) * Math.PI / 180
-  const orbitX = Math.cos(angle) * (compactViewport ? 36 : 31)
-  const orbitY = Math.sin(angle) * (compactViewport ? 22 : 29)
+  // Phones: the ring sits higher and flatter so the project copy fits below it (OrbitHalo.css: --halo-cy, --halo-ry).
+  const orbitX = Math.cos(angle) * (compactViewport ? 33 : 31)
+  const orbitY = compactViewport ? -12 + Math.sin(angle) * 15 : Math.sin(angle) * 29
   const stackX = (index - 2.5) * .16
   const stackY = index * .42
   let x = formation < .48 ? mix(openedX, stackX, gather) : mix(stackX, orbitX, expand)

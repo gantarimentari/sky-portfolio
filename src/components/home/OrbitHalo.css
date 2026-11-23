@@ -16,7 +16,7 @@
 }
 
 @media (max-width: 680px) {
-  #selected-work.project-orbit-section { --halo-rx: 36vw; --halo-ry: 22vh; }
+  #selected-work.project-orbit-section { --halo-rx: 33vw; --halo-ry: 15vh; --halo-cy: -12vh; }
 }
 
 /* The ring sits at 1/1.3 = 76.9% of this box, exactly on the path the cards travel. */
@@ -29,7 +29,7 @@
   top: 50%;
   width: calc(var(--halo-rx) * 2.6);
   height: calc(var(--halo-ry) * 2.6);
-  margin: calc(var(--halo-ry) * -1.3) 0 0 calc(var(--halo-rx) * -1.3);
+  margin: calc(var(--halo-ry) * -1.3 + var(--halo-cy, 0px)) 0 0 calc(var(--halo-rx) * -1.3);
   border: 0;
   border-radius: 0;
   box-shadow: none;
@@ -459,7 +459,41 @@
   #selected-work .orbit-archive-actions { gap: 1.1rem; }
   #selected-work .orbit-archive-actions a { font-size: .66rem; white-space: nowrap; }
   #selected-work .orbit-archive-poster {
-    transform: translate(-50%, -50%) translate(calc(var(--o) * 1.1rem), calc(var(--a) * -.3rem)) rotate(calc(var(--o) * 2.2deg)) scale(calc(1 - var(--a) * .05));
+    transform: translate(-50%, -50%) translate(calc(var(--o) * .5rem), calc(var(--a) * -.3rem)) rotate(calc(var(--o) * 1.6deg)) scale(calc(1 - var(--a) * .05));
   }
   #selected-work .orbit-archive-meta > p { font-size: .84rem; }
+}
+
+/*
+ * Phones, orbit phase: the copy no longer squeezes into the middle of the ring (38vw, 6-9px type).
+ * The ring sits higher and flatter (cardGeometry), and the copy takes the full width below it,
+ * above the navigation, at readable sizes.
+ */
+@media (max-width: 680px) {
+  #selected-work .orbit-focus-copy {
+    left: 1.25rem;
+    right: 1.25rem;
+    top: calc(50% + 3vh + 3rem);
+    bottom: auto;
+    width: auto;
+    max-height: none;
+    padding: 0;
+    overflow: visible;
+    translate: none;
+  }
+  #selected-work .orbit-focus-copy::before { inset: -30% -6%; }
+  #selected-work .orbit-focus-copy .eyebrow { margin-bottom: .35rem; font-size: .72rem; line-height: 1.3; }
+  #selected-work .orbit-focus-copy h3 { font-size: clamp(1.25rem, 6vw, 1.6rem); line-height: 1.1; }
+  #selected-work .orbit-focus-copy > p:not(.eyebrow) {
+    display: -webkit-box;
+    margin: .4rem 0 .5rem;
+    overflow: hidden;
+    font-size: .82rem;
+    line-height: 1.4;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+  #selected-work .orbit-focus-stack { margin: 0 0 .6rem; font-size: .7rem; }
+  #selected-work .orbit-focus-stack li:nth-child(n + 4) { display: none; }
+  #selected-work .orbit-focus-actions a { font-size: .66rem; }
 }
