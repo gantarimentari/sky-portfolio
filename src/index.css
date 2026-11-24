@@ -8275,9 +8275,11 @@ body:has(.reference-home) .site-header {
   width: min(42rem, calc(100% - 2rem));
   height: 3.15rem;
   min-height: 0;
-  inset: .9rem auto auto 50%;
-  transform: translateX(-50%);
+  inset: .9rem 0 auto;
+  margin-inline: auto;
+  transform: none;
   padding: .38rem .45rem;
+  overflow: visible;
   border: 1px solid rgba(255, 255, 255, .2);
   border-radius: 999px;
   color: #fff;
@@ -8285,6 +8287,7 @@ body:has(.reference-home) .site-header {
   box-shadow: 0 .7rem 2rem rgba(20, 62, 119, .16), inset 0 1px 0 rgba(255, 255, 255, .12);
   backdrop-filter: blur(22px) saturate(135%);
   -webkit-backdrop-filter: blur(22px) saturate(135%);
+  z-index: 80;
 }
 
 .site-header .brand {
@@ -8461,7 +8464,6 @@ body:has(.reference-home) .site-header {
     backdrop-filter .55s ease,
     opacity .25s ease,
     visibility .25s ease;
-  will-change: width, height, top, padding, border-radius;
 }
 
 body:has(.reference-home .intro-loader) .site-header {
