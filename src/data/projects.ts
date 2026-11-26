@@ -76,6 +76,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'fanina-company-profile', title: 'Company Profile drh. Fanina', category: 'Frontend / Business Website', role: 'Frontend Developer · Automated UI Testing', accent: 'paper',
+    liveUrl: 'https://compro-drhfanina-pad1.vercel.app/',
     moment: 'soft-afternoon', momentLabel: 'Soft Afternoon',
     summary: 'A responsive company profile website developed for a veterinary business, with automated UI testing covering key authentication and profile workflows.',
     technologies: ['Next.js', 'React', 'Tailwind CSS', 'Java', 'Selenium'],

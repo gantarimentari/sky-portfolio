@@ -77,6 +77,12 @@ export function ProjectDetailSystem({
                   fetchPriority="high"
                 />
               </picture>
+              {project.liveUrl && (
+                <a className="project-detail-live-link" href={project.liveUrl} target="_blank" rel="noreferrer">
+                  Visit live project
+                  <ExternalLink aria-hidden="true" size={16} />
+                </a>
+              )}
             </figure>
           )}
         </header>
@@ -120,7 +126,7 @@ export function ProjectDetailSystem({
                 <ExternalLink aria-hidden="true" size={16} />
               </a>
             )}
-            {project.liveUrl && (
+            {project.liveUrl && !project.screenshot && (
               <a href={project.liveUrl} target="_blank" rel="noreferrer">
                 Visit live project
                 <ExternalLink aria-hidden="true" size={16} />

@@ -313,6 +313,28 @@ body:has(.project-detail-system) {
   box-shadow: 0 1.5rem 4rem color-mix(in srgb, var(--pd-ink) 20%, transparent);
 }
 
+.project-detail-live-link {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: .6rem;
+  padding: .65rem 1rem;
+  color: var(--pd-ink);
+  font-size: .78rem;
+  font-weight: 700;
+  transition: background .2s ease, transform .2s ease;
+}
+
+.project-detail-live-link:hover {
+  color: var(--pd-ink);
+  transform: translateY(-2px);
+}
+
+.project-detail-live-link:focus-visible {
+  outline: 2px solid var(--pd-ink);
+  outline-offset: 4px;
+}
+
 .project-detail-technologies {
   display: grid;
   grid-template-columns: minmax(7rem, .22fr) minmax(0, 1fr);
@@ -546,6 +568,7 @@ body:has(.project-detail-system) {
 @media (prefers-reduced-motion: reduce) {
   .project-detail-back,
   .project-detail-poster,
+  .project-detail-live-link,
   .project-detail-next {
     transition: none;
   }

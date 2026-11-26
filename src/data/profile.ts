@@ -227,7 +227,7 @@ export const profile = {
   email: 'gantarilarasati@gmail.com',
   github: '',
   linkedin: 'https://www.linkedin.com/in/larasati-ayu-gantari/',
-  resume: '/CV_Larasati Ayu Gantari',
+  resume: '/CV_Larasati-Ayu-Gantari.pdf',
   intro: 'I’m a Software Engineering Technology student at Universitas Gadjah Mada with hands-on experience in web application development, API integration, and software testing.',
   skills: [
     { label: 'Frontend', items: ['React', 'Next.js', 'Vue', 'TypeScript', 'Tailwind CSS'] },
